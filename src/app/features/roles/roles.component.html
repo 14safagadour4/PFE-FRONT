@@ -1,1 +1,124 @@
-<p>roles works!</p>
+<div class="page">
+
+    <div class="page-header">
+        <div>
+            <h1>Rôles & Permissions</h1>
+            <p>Configurer les rôles des partenaires</p>
+        </div>
+        <button class="btn-create" (click)="openCreate()">+ Nouveau rôle</button>
+    </div>
+
+    <div class="loading-state" *ngIf="loading">
+        <div class="spinner"></div>
+        <p>Chargement...</p>
+    </div>
+
+    <!-- Roles Grid -->
+    <div class="roles-grid" *ngIf="!loading">
+        <div class="role-card" *ngFor="let role of roles" (click)="openRole(role)" [style.--role-color]="role.color">
+            <div class="role-top">
+                <div class="role-icon" [style.background]="role.color + '22'" [style.color]="role.color">
+                    {{ role.displayName[0] }}
+                </div>
+                <span class="system-badge" *ngIf="role.isSystem">Système</span>
+            </div>
+            <h3>{{ role.displayName }}</h3>
+            <p class="role-name">{{ role.name }}</p>
+            <p class="role-desc">{{ role.description }}</p>
+
+            <div class="perms-preview">
+                <span class="perm-chip" *ngFor="let p of role.permissions.slice(0,3)">{{ p }}</span>
+                <span class="perm-chip more" *ngIf="role.permissions.length > 3">+{{ role.permissions.length - 3
+                    }}</span>
+            </div>
+
+            <div class="role-footer">
+                <span>👥 {{ role.partnersCount }} partenaire(s)</span>
+                <span>{{ role.createdAt | date:'dd/MM/yyyy' }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Modal -->
+    <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+        <div class="modal" (click)="$event.stopPropagation()" *ngIf="selectedRole">
+            <button class="modal-close" (click)="closeModal()">×</button>
+            <div class="modal-header">
+                <div class="modal-icon" [style.background]="selectedRole.color + '22'"
+                    [style.color]="selectedRole.color">
+                    {{ selectedRole.displayName[0] }}
+                </div>
+                <div>
+                    <h2>{{ selectedRole.displayName }}</h2>
+                    <code>{{ selectedRole.name }}</code>
+                </div>
+            </div>
+            <p class="modal-desc">{{ selectedRole.description }}</p>
+
+            <h4>Permissions ({{ selectedRole.permissions.length }})</h4>
+            <div class="perms-list">
+                <div class="perm-row" *ngFor="let p of allPermissions">
+                    <div class="perm-check" [class.active]="roleHasPerm(selectedRole, p.key)">
+                        {{ roleHasPerm(selectedRole, p.key) ? '✓' : '○' }}
+                    </div>
+                    <div>
+                        <span class="perm-label">{{ p.label }}</span>
+                        <span class="perm-desc">{{ p.description }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer" *ngIf="!selectedRole.isSystem">
+                <button class="btn-delete" (click)="deleteRole(selectedRole)">🗑 Supprimer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Modal -->
+    <div class="modal-overlay" *ngIf="showCreateModal" (click)="closeCreate()">
+        <div class="modal create-modal" (click)="$event.stopPropagation()">
+            <button class="modal-close" (click)="closeCreate()">×</button>
+            <h2>Créer un rôle</h2>
+
+            <div class="form-group">
+                <label>Nom technique (ex: CONTENT_MANAGER)</label>
+                <input type="text" [(ngModel)]="newRole.name" placeholder="NOM_ROLE" class="form-input" />
+            </div>
+            <div class="form-group">
+                <label>Nom affiché</label>
+                <input type="text" [(ngModel)]="newRole.displayName" placeholder="Gestionnaire de contenu"
+                    class="form-input" />
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <input type="text" [(ngModel)]="newRole.description" placeholder="Description du rôle..."
+                    class="form-input" />
+            </div>
+            <div class="form-group">
+                <label>Couleur</label>
+                <div class="color-row">
+                    <input type="color" [(ngModel)]="newRole.color" class="color-picker" />
+                    <span class="color-val">{{ newRole.color }}</span>
+                </div>
+            </div>
+
+            <h4>Permissions</h4>
+            <div class="perms-list">
+                <div class="perm-row clickable" *ngFor="let p of allPermissions" (click)="togglePerm(p.key)">
+                    <div class="perm-check" [class.active]="hasPerm(p.key)">
+                        {{ hasPerm(p.key) ? '✓' : '○' }}
+                    </div>
+                    <div>
+                        <span class="perm-label">{{ p.label }}</span>
+                        <span class="perm-desc">{{ p.description }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-cancel" (click)="closeCreate()">Annuler</button>
+                <button class="btn-save" (click)="saveRole()">✓ Créer le rôle</button>
+            </div>
+        </div>
+    </div>
+</div>

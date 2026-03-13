@@ -1,1 +1,116 @@
-<p>layout works!</p>
+<div class="layout-wrap">
+
+    <!-- Overlay mobile -->
+    <div class="overlay" [class.show]="sidenavOpen()" (click)="closeSidenav()"></div>
+
+    <!-- ══ SIDENAV ════════════════════════════════════════ -->
+    <nav class="sidenav" [class.open]="sidenavOpen()">
+
+        <!-- Logo + toggle -->
+        <div class="nav-head">
+            <div class="nav-logo">🌿</div>
+            @if (sidenavOpen()) {
+            <div class="nav-brand">
+                <div class="nav-brand-name">Cartas</div>
+                <span class="nav-brand-tag">back-office</span>
+            </div>
+            }
+            <button class="toggle-btn" (click)="toggleSidenav()">
+                {{ sidenavOpen() ? '◀' : '▶' }}
+            </button>
+        </div>
+
+        <!-- User card -->
+        <div class="nav-user" [class.mini]="!sidenavOpen()">
+            <div class="nav-av">{{ initials() }}</div>
+            @if (sidenavOpen()) {
+            <div class="nav-user-info">
+                <span class="nav-role">{{ user()?.role?.replace('_',' ') }}</span>
+                <div class="nav-uname">{{ user()?.firstName }} {{ user()?.lastName }}</div>
+            </div>
+            }
+        </div>
+
+        <!-- Sections nav -->
+        @for (section of visibleSections; track section.label) {
+        @if (sidenavOpen()) {
+        <div class="nav-sec-label">{{ section.label }}</div>
+        } @else {
+        <div class="nav-sec-dot"></div>
+        }
+
+        <div class="nav-items">
+            @for (item of section.items; track item.route) {
+            <a class="nav-item" [routerLink]="item.route" routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: item.route === '/dashboard'}"
+                [attr.title]="!sidenavOpen() ? item.label : null">
+                <span class="nav-ico">{{ item.ico }}</span>
+                @if (sidenavOpen()) {
+                <span class="nav-label">{{ item.label }}</span>
+                @if (item.badge) {
+                <span class="nav-badge" [class.badge-r]="item.badgeType==='r'" [class.badge-g]="item.badgeType==='g'">
+                    {{ item.badge }}
+                </span>
+                }
+                }
+            </a>
+            }
+        </div>
+        }
+
+        <!-- Footer -->
+        <div class="nav-foot">
+            @if (auth.isSuperAdmin()) {
+            <button class="btn-mgmt" [class.mini]="!sidenavOpen()" (click)="mgmtOpen.set(true)">
+                <span class="mgmt-plus">+</span>
+                @if (sidenavOpen()) { <span>Management</span> }
+            </button>
+            }
+            <button class="btn-logout" [class.mini]="!sidenavOpen()" (click)="logout()">
+                <span>🚪</span>
+                @if (sidenavOpen()) { <span>Déconnexion</span> }
+            </button>
+        </div>
+
+    </nav>
+
+    <!-- ══ MAIN ══════════════════════════════════════════ -->
+    <div class="main-wrap" [class.shifted]="sidenavOpen()">
+
+        <!-- Topbar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="burger" (click)="toggleSidenav()">☰</button>
+                <div>
+                    <h2 class="page-title">{{ currentPage() }}</h2>
+                    <span class="page-bc">cartas / {{ currentPage().toLowerCase() }}</span>
+                </div>
+            </div>
+
+            <div class="topbar-right">
+                <!-- ✅ Bouton theme jour/nuit -->
+                <button class="btn-theme" (click)="toggleTheme()">
+                    <span class="theme-icon">{{ isDark() ? '🌙' : '☀️' }}</span>
+                    <span class="theme-label">{{ isDark() ? 'Sombre' : 'Clair' }}</span>
+                </button>
+
+                <button class="topbar-notif">
+                    <span class="pip"></span>🔔
+                </button>
+                <div class="topbar-av">{{ initials() }}</div>
+            </div>
+        </header>
+
+        <!-- Page content via router -->
+        <main class="page-body">
+            <router-outlet />
+        </main>
+
+    </div>
+
+</div>
+
+<!-- ✅ Management Modal -->
+@if (mgmtOpen()) {
+<app-management-modal (closed)="mgmtOpen.set(false)" />
+}

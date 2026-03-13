@@ -1,5 +1,14 @@
-import { CanActivateFn } from '@angular/router';
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { map, catchError, of } from 'rxjs';
 
-export const registrationGuard: CanActivateFn = (route, state) => {
-  return true;
+// Empêche d'accéder à /register si SA déjà enregistré
+export const registrationGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  const router = inject(Router);
+  return auth.checkStatus().pipe(
+    map(r => r.data ? router.createUrlTree(['/login']) : true),
+    catchError(() => of(true))
+  );
 };

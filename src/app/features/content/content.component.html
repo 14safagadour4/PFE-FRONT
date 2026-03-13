@@ -1,1 +1,111 @@
-<p>content works!</p>
+<div class="page">
+
+    <div class="page-header">
+        <div>
+            <h1>Contenu</h1>
+            <p>Gérer les articles, vidéos et exercices de la plateforme</p>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+        <div class="stat-card purple">
+            <span class="stat-icon">📚</span>
+            <div><span class="stat-num">{{ stats.total }}</span><span class="stat-label">Total contenus</span></div>
+        </div>
+        <div class="stat-card green">
+            <span class="stat-icon">🟢</span>
+            <div><span class="stat-num">{{ stats.published }}</span><span class="stat-label">Publiés</span></div>
+        </div>
+        <div class="stat-card gray">
+            <span class="stat-icon">📝</span>
+            <div><span class="stat-num">{{ stats.draft }}</span><span class="stat-label">Brouillons</span></div>
+        </div>
+        <div class="stat-card gold">
+            <span class="stat-icon">👁️</span>
+            <div><span class="stat-num">{{ stats.totalViews | number }}</span><span class="stat-label">Vues
+                    totales</span></div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-bar">
+        <div class="search-box">
+            <span>🔍</span>
+            <input type="text" placeholder="Rechercher un contenu..." [(ngModel)]="searchTerm"
+                (ngModelChange)="applyFilters()" />
+        </div>
+        <select class="select-filter" [(ngModel)]="typeFilter" (ngModelChange)="applyFilters()">
+            <option value="ALL">Tous les types</option>
+            <option value="ARTICLE">📄 Articles</option>
+            <option value="VIDEO">🎬 Vidéos</option>
+            <option value="PODCAST">🎙️ Podcasts</option>
+            <option value="EXERCISE">🧘 Exercices</option>
+        </select>
+        <select class="select-filter" [(ngModel)]="statusFilter" (ngModelChange)="applyFilters()">
+            <option value="ALL">Tous les statuts</option>
+            <option value="PUBLISHED">Publiés</option>
+            <option value="DRAFT">Brouillons</option>
+            <option value="ARCHIVED">Archivés</option>
+        </select>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading-state" *ngIf="loading">
+        <div class="spinner"></div>
+        <p>Chargement...</p>
+    </div>
+
+    <!-- Grid -->
+    <div class="content-grid" *ngIf="!loading">
+        <div class="content-card" *ngFor="let item of filtered" (click)="openModal(item)">
+            <div class="card-header">
+                <span class="type-badge">{{ typeIcons[item.type] }} {{ item.type }}</span>
+                <span class="status-badge" [ngClass]="item.status.toLowerCase()">{{ item.status }}</span>
+            </div>
+            <h3>{{ item.title }}</h3>
+            <p class="category">{{ item.category }}</p>
+            <p class="author">✍️ {{ item.author }}</p>
+            <div class="card-footer">
+                <span class="views">👁️ {{ item.views | number }}</span>
+                <span class="date">{{ item.updatedAt | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="card-actions" (click)="$event.stopPropagation()">
+                <button class="btn-toggle" (click)="toggleStatus(item)" *ngIf="item.status !== 'ARCHIVED'">
+                    {{ item.status === 'PUBLISHED' ? '⏸ Dépublier' : '▶ Publier' }}
+                </button>
+                <button class="btn-archive" (click)="archive(item)" *ngIf="item.status !== 'ARCHIVED'">🗄</button>
+            </div>
+        </div>
+
+        <div class="empty-state" *ngIf="filtered.length === 0">
+            <div>📭</div>
+            <p>Aucun contenu trouvé</p>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+        <div class="modal" (click)="$event.stopPropagation()" *ngIf="selectedItem">
+            <button class="modal-close" (click)="closeModal()">×</button>
+            <div class="modal-type">{{ typeIcons[selectedItem.type] }} {{ selectedItem.type }}</div>
+            <h2>{{ selectedItem.title }}</h2>
+            <div class="modal-body">
+                <div class="info-row"><span>Catégorie</span><strong>{{ selectedItem.category }}</strong></div>
+                <div class="info-row"><span>Auteur</span><strong>{{ selectedItem.author }}</strong></div>
+                <div class="info-row"><span>Statut</span>
+                    <span class="status-badge" [ngClass]="selectedItem.status.toLowerCase()">{{ selectedItem.status
+                        }}</span>
+                </div>
+                <div class="info-row"><span>Vues</span><strong>{{ selectedItem.views | number }}</strong></div>
+                <div class="info-row"><span>Créé le</span><strong>{{ selectedItem.createdAt | date:'dd/MM/yyyy'
+                        }}</strong></div>
+                <div class="info-row"><span>Mis à jour</span><strong>{{ selectedItem.updatedAt | date:'dd/MM/yyyy'
+                        }}</strong></div>
+                <div class="desc" *ngIf="selectedItem.description">
+                    <p>{{ selectedItem.description }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
