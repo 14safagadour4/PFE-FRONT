@@ -7,9 +7,13 @@ import { Observable } from 'rxjs';
 })
 export class DataService {
 
+  // URL complète du backend
+  private apiUrl = 'http://localhost:8080/api';
+
   constructor(private http: HttpClient) { }
 
   getHelloMessage(): Observable<any> {
-    return this.http.get('/api/hello');
+    // Appelle directement le backend sur le port 8080
+    return this.http.get(`${this.apiUrl}/auth/status`);
   }
 }

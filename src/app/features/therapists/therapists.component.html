@@ -1,1 +1,124 @@
-<p>therapists works!</p>
+<div class="page">
+
+    <div class="page-header">
+        <div>
+            <h1>Thérapeutes</h1>
+            <p>Gérer les thérapeutes de la plateforme</p>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+        <div class="stat-card purple">
+            <div class="stat-icon">🧑‍⚕️</div>
+            <div><span class="stat-num">{{ stats.total }}</span><span class="stat-label">Total</span></div>
+        </div>
+        <div class="stat-card green">
+            <div class="stat-icon">✅</div>
+            <div><span class="stat-num">{{ stats.active }}</span><span class="stat-label">Actifs</span></div>
+        </div>
+        <div class="stat-card gray">
+            <div class="stat-icon">⏸️</div>
+            <div><span class="stat-num">{{ stats.inactive }}</span><span class="stat-label">Inactifs</span></div>
+        </div>
+        <div class="stat-card gold">
+            <div class="stat-icon">⭐</div>
+            <div><span class="stat-num">{{ stats.avgRating }}</span><span class="stat-label">Note moy.</span></div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-bar">
+        <div class="search-box">
+            <span>🔍</span>
+            <input type="text" placeholder="Rechercher un thérapeute..." [(ngModel)]="searchTerm"
+                (ngModelChange)="applyFilters()" />
+        </div>
+        <div class="filter-tabs">
+            <button [class.active]="statusFilter==='ALL'" (click)="statusFilter='ALL'; applyFilters()">Tous</button>
+            <button [class.active]="statusFilter==='ACTIVE'"
+                (click)="statusFilter='ACTIVE'; applyFilters()">Actifs</button>
+            <button [class.active]="statusFilter==='INACTIVE'"
+                (click)="statusFilter='INACTIVE'; applyFilters()">Inactifs</button>
+            <button [class.active]="statusFilter==='PENDING'" (click)="statusFilter='PENDING'; applyFilters()">En
+                attente</button>
+        </div>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading-state" *ngIf="loading">
+        <div class="spinner"></div>
+        <p>Chargement...</p>
+    </div>
+
+    <!-- List -->
+    <div class="therapists-list" *ngIf="!loading">
+        <div class="therapist-row" *ngFor="let t of filtered" (click)="openModal(t)">
+            <div class="row-left">
+                <div class="avatar">{{ initials(t) }}</div>
+                <div class="info">
+                    <h3>{{ t.firstName }} {{ t.lastName }}</h3>
+                    <span class="specialization">{{ t.specialization }}</span>
+                    <span class="meta">{{ t.email }}</span>
+                </div>
+            </div>
+            <div class="row-middle">
+                <div class="meta-item">
+                    <span class="meta-label">Expérience</span>
+                    <span class="meta-val">{{ t.yearsExperience }} ans</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Séances</span>
+                    <span class="meta-val">{{ t.sessionsCount }}</span>
+                </div>
+                <div class="meta-item" *ngIf="t.rating">
+                    <span class="meta-label">Note</span>
+                    <span class="meta-val gold">⭐ {{ t.rating }}</span>
+                </div>
+            </div>
+            <div class="row-right" (click)="$event.stopPropagation()">
+                <span class="badge" [ngClass]="t.status.toLowerCase()">{{ t.status }}</span>
+                <label class="toggle" *ngIf="t.status !== 'PENDING'">
+                    <input type="checkbox" [checked]="t.status === 'ACTIVE'" (change)="toggleStatus(t)" />
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="empty-state" *ngIf="filtered.length === 0">
+            <div>🔎</div>
+            <p>Aucun thérapeute trouvé</p>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+        <div class="modal" (click)="$event.stopPropagation()" *ngIf="selectedTherapist">
+            <button class="modal-close" (click)="closeModal()">×</button>
+            <div class="modal-header">
+                <div class="modal-avatar">{{ initials(selectedTherapist) }}</div>
+                <div>
+                    <h2>{{ selectedTherapist.firstName }} {{ selectedTherapist.lastName }}</h2>
+                    <p class="modal-spec">{{ selectedTherapist.specialization }}</p>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="info-row"><span>Email</span><strong>{{ selectedTherapist.email }}</strong></div>
+                <div class="info-row" *ngIf="selectedTherapist.phone"><span>Téléphone</span><strong>{{
+                        selectedTherapist.phone }}</strong></div>
+                <div class="info-row"><span>Expérience</span><strong>{{ selectedTherapist.yearsExperience }}
+                        ans</strong></div>
+                <div class="info-row"><span>Séances</span><strong>{{ selectedTherapist.sessionsCount }}</strong></div>
+                <div class="info-row" *ngIf="selectedTherapist.rating"><span>Note</span><strong>⭐ {{
+                        selectedTherapist.rating }}/5</strong></div>
+                <div class="info-row"><span>Rejoint le</span><strong>{{ selectedTherapist.joinedAt | date:'dd/MM/yyyy'
+                        }}</strong></div>
+                <div class="info-row"><span>Langues</span><strong>{{ selectedTherapist.languages?.join(', ') || 'N/A'
+                        }}</strong></div>
+                <div class="bio" *ngIf="selectedTherapist.bio">
+                    <p>{{ selectedTherapist.bio }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -6,7 +6,7 @@ import { environment } from '../../../environments/environment';
 import { ApiResponse, AuthResponse, AuthUser, LoginRequest, RegisterRequest } from '../models';
 
 const TOKEN_KEY = 'cartas_token';
-const USER_KEY  = 'cartas_user';
+const USER_KEY = 'cartas_user';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -14,10 +14,10 @@ export class AuthService {
   private api = `${environment.apiUrl}/auth`;
 
   // ── Signals ──────────────────────────────────────
-  currentUser  = signal<AuthUser | null>(this.loadUser());
-  isLoggedIn   = computed(() => !!this.currentUser());
+  currentUser = signal<AuthUser | null>(this.loadUser());
+  isLoggedIn = computed(() => !!this.currentUser());
   isSuperAdmin = computed(() => this.currentUser()?.role === 'SUPER_ADMIN');
-  theme        = signal<'dark' | 'light'>(this.currentUser()?.preferredTheme ?? 'dark');
+  theme = signal<'dark' | 'light'>(this.currentUser()?.preferredTheme ?? 'dark');
 
   constructor(private http: HttpClient, private router: Router) {
     // Applique le thème sur <html>
@@ -49,7 +49,38 @@ export class AuthService {
   }
 
   getToken(): string | null { return localStorage.getItem(TOKEN_KEY); }
+  getUser(): any | null {
+    const userStr = localStorage.getItem('user');
+    if (!userStr) return null;
 
+    try {
+      return JSON.parse(userStr);
+    } catch (e) {
+      console.error('Erreur parsing user:', e);
+      return null;
+    }
+  }
+  // Dans auth.service.ts
+  getUserFromToken(): any | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      // Décoder le token JWT (partie payload)
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return {
+        firstName: payload.firstName || payload.sub?.split('@')[0] || '',
+        lastName: payload.lastName || '',
+        email: payload.sub || payload.email || '',
+        preferredTheme: payload.preferredTheme || 'dark',
+        role: payload.role || '',
+        id: payload.id || payload.userId
+      };
+    } catch (e) {
+      console.error('Erreur décodage token:', e);
+      return null;
+    }
+  }
   toggleTheme(): void {
     this.theme.update(t => t === 'dark' ? 'light' : 'dark');
   }

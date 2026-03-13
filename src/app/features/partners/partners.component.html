@@ -1,1 +1,199 @@
-<p>partners works!</p>
+<div class="partners-container">
+    <!-- En-tête -->
+    <div class="partners-header">
+        <div>
+            <h1>Gestion des partenaires</h1>
+            <p class="subtitle">Invitez et gérez les partenaires de la plateforme</p>
+        </div>
+        <button class="btn-primary" (click)="openManagementModal()">
+            <span>⚙️</span> Management
+        </button>
+    </div>
+
+    <!-- Grille des partenaires -->
+    <div class="partners-grid">
+        @for (partner of partners(); track partner.id) {
+        <div class="partner-card" [class.inactive]="!partner.isActive">
+            <div class="card-header">
+                <div class="partner-avatar">{{ initials(partner) }}</div>
+                <div class="partner-info">
+                    <h3>{{ partner.firstName }} {{ partner.lastName }}</h3>
+                    <span class="partner-email">{{ partner.email }}</span>
+                </div>
+                <div class="partner-status">
+                    <span class="status-badge" [class.active]="partner.isActive">
+                        {{ partner.isActive ? 'Actif' : 'Inactif' }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="partner-role">
+                    <span class="role-icon">🔐</span>
+                    <span>{{ partner.role.name }}</span>
+                </div>
+                <div class="partner-perms">
+                    @if (partner.canViewDashboard) {
+                    <span class="perm-tag" title="Voir Dashboard">📊</span>
+                    }
+                    @if (partner.canAddContent) {
+                    <span class="perm-tag" title="Ajouter Contenu">📝</span>
+                    }
+                    @if (partner.canManageUsers) {
+                    <span class="perm-tag" title="Gérer Utilisateurs">👥</span>
+                    }
+                    @if (partner.canManageSpecialists) {
+                    <span class="perm-tag" title="Valider Spécialistes">🩺</span>
+                    }
+                    @if (partner.canViewActivityLogs) {
+                    <span class="perm-tag" title="Voir Logs">📋</span>
+                    }
+                    @if (partner.canViewStatistics) {
+                    <span class="perm-tag" title="Voir Statistiques">📈</span>
+                    }
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <span class="date-info">
+                    📅 {{ partner.createdAt | date:'dd/MM/yyyy' }}
+                </span>
+                <div class="card-actions">
+                    <button class="btn-icon" (click)="toggle(partner.id)"
+                        [title]="partner.isActive ? 'Désactiver' : 'Activer'">
+                        {{ partner.isActive ? '🔴' : '🟢' }}
+                    </button>
+                    <button class="btn-icon" (click)="remove(partner.id)" title="Supprimer">
+                        🗑️
+                    </button>
+                </div>
+            </div>
+        </div>
+        } @empty {
+        <div class="empty-state">
+            <span class="empty-icon">🤝</span>
+            <h3>Aucun partenaire</h3>
+            <p>Commencez par inviter votre premier partenaire</p>
+            <button class="btn-primary" (click)="modalOpen.set(true)">
+                + Inviter un partenaire
+            </button>
+        </div>
+        }
+    </div>
+
+    <!-- Pagination -->
+    @if (page() && page()!.totalPages > 1) {
+    <div class="pagination">
+        <button class="page-btn" [disabled]="page()!.first" (click)="load(page()!.number - 1)">
+            ←
+        </button>
+        <span class="page-info">
+            Page {{ page()!.number + 1 }} / {{ page()!.totalPages }}
+        </span>
+        <button class="page-btn" [disabled]="page()!.last" (click)="load(page()!.number + 1)">
+            →
+        </button>
+    </div>
+    }
+
+    <!-- Modal d'invitation -->
+    @if (modalOpen()) {
+    <div class="modal-overlay" (click)="modalOpen.set(false)">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2>Créer un nouveau partenaire</h2>
+                <button class="modal-close" (click)="modalOpen.set(false)">✕</button>
+            </div>
+
+            <form [formGroup]="form" (ngSubmit)="submit()" class="modal-form">
+                <!-- Informations de base -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Prénom</label>
+                        <input type="text" formControlName="firstName" placeholder="ex: Karim">
+                        @if (form.get('firstName')?.invalid && form.get('firstName')?.touched) {
+                        <small class="error">Prénom requis</small>
+                        }
+                    </div>
+                    <div class="form-group">
+                        <label>Nom</label>
+                        <input type="text" formControlName="lastName" placeholder="ex: Mansouri">
+                        @if (form.get('lastName')?.invalid && form.get('lastName')?.touched) {
+                        <small class="error">Nom requis</small>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email professionnel</label>
+                    <input type="email" formControlName="email" placeholder="partenaire@cartas.tn">
+                    @if (form.get('email')?.invalid && form.get('email')?.touched) {
+                    <small class="error">Email valide requis</small>
+                    }
+                </div>
+
+                <!-- Sélection du rôle -->
+                <div class="form-group">
+                    <label>Rôle</label>
+                    <div class="roles-grid">
+                        @for (role of roles(); track role.id) {
+                        <div class="role-card" [class.selected]="selectedRole()?.id === role.id"
+                            (click)="pickRole(role)">
+                            <span class="role-name">{{ role.name }}</span>
+                            <span class="role-desc">{{ role.description }}</span>
+                        </div>
+                        }
+                    </div>
+                    @if (!selectedRole() && form.touched) {
+                    <small class="error">Veuillez sélectionner un rôle</small>
+                    }
+                </div>
+
+                <!-- Permissions -->
+                <div class="form-group">
+                    <label>Permissions additionnelles</label>
+                    <div class="perms-list">
+                        @for (perm of permKeys; track perm.key) {
+                        <div class="perm-item">
+                            <label class="perm-check">
+                                <input type="checkbox" [checked]="permStates()[perm.key]"
+                                    (change)="togglePerm(perm.key)">
+                                <span class="perm-label">{{ perm.label }}</span>
+                            </label>
+                            <span class="perm-desc">{{ perm.desc }}</span>
+                        </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Message d'erreur -->
+                @if (formError()) {
+                <div class="alert error">
+                    ⚠️ {{ formError() }}
+                </div>
+                }
+
+                <!-- Boutons -->
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" (click)="modalOpen.set(false)">
+                        Annuler
+                    </button>
+                    <button type="submit" class="btn-primary" [disabled]="formLoading()">
+                        @if (formLoading()) {
+                        <span class="spinner-small"></span>
+                        Création...
+                        } @else {
+                        Créer le partenaire
+                        }
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    }
+</div>
+
+<!-- Modal Management (à la place de l'ancien modal) -->
+@if (managementModalOpen()) {
+    <app-management-modal (closed)="closeManagementModal()" />
+}

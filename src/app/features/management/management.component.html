@@ -1,0 +1,86 @@
+<div class="overlay" (click)="close()">
+    <div class="modal" (click)="$event.stopPropagation()">
+
+        <!-- Success state -->
+        <div class="success-state" *ngIf="success">
+            <div class="success-icon">✓</div>
+            <h3>Invitation envoyée !</h3>
+            <p>Le partenaire recevra un email pour activer son compte.</p>
+        </div>
+
+        <!-- Form -->
+        <ng-container *ngIf="!success">
+            <div class="modal-head">
+                <h3>＋ Ajouter un Partenaire</h3>
+                <button class="modal-close" (click)="close()">✕</button>
+            </div>
+
+            <!-- Nom / Prénom -->
+            <form [formGroup]="form">
+                <div class="form-row">
+                    <div class="f">
+                        <label>Prénom</label>
+                        <div class="f-wrap">
+                            <span class="f-ico">👤</span>
+                            <input formControlName="firstName" placeholder="partner" />
+                        </div>
+                        <div class="f-line"
+                            [class.err]="form.get('firstName')?.invalid && form.get('firstName')?.touched"></div>
+                    </div>
+                    <div class="f">
+                        <label>Nom</label>
+                        <div class="f-wrap">
+                            <span class="f-ico">👤</span>
+                            <input formControlName="lastName" placeholder="partner" />
+                        </div>
+                        <div class="f-line"
+                            [class.err]="form.get('lastName')?.invalid && form.get('lastName')?.touched"></div>
+                    </div>
+                </div>
+
+                <div class="f">
+                    <label>Email professionnel</label>
+                    <div class="f-wrap">
+                        <span class="f-ico">✉️</span>
+                        <input type="email" formControlName="email" placeholder="partner@adress.tn" />
+                    </div>
+                    <div class="f-line" [class.err]="form.get('email')?.invalid && form.get('email')?.touched"></div>
+                </div>
+            </form>
+
+            <!-- Assign role -->
+            <div class="section-label">Assigner un rôle</div>
+            <div class="role-opts">
+                <div class="role-opt" *ngFor="let role of roles" [class.picked]="selectedRoleId === role.id"
+                    (click)="pickRole(role.id)">
+                    <div class="ro-name">{{ role.icon }} {{ role.name }}</div>
+                    <div class="ro-desc">{{ role.desc }}</div>
+                </div>
+            </div>
+
+            <!-- Custom permissions -->
+            <div class="perms-sec">
+                <div class="perms-label">Permissions personnalisées</div>
+                <div class="perms-grid">
+                    <div class="perm" *ngFor="let p of perms" (click)="togglePerm(p)">
+                        <div class="perm-info">
+                            <div class="perm-name">{{ p.label }}</div>
+                            <small>{{ p.sub }}</small>
+                        </div>
+                        <div class="tog" [class.on]="p.on"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error -->
+            <div class="error-msg" *ngIf="errorMsg">⚠️ {{ errorMsg }}</div>
+
+            <!-- Submit -->
+            <button class="btn-submit" (click)="submit()" [disabled]="loading">
+                <span *ngIf="!loading">Créer &amp; Envoyer l'invitation →</span>
+                <span *ngIf="loading" class="spinner-inline">⟳ Envoi en cours…</span>
+            </button>
+        </ng-container>
+
+    </div>
+</div>

@@ -1,1 +1,68 @@
-<p>activities works!</p>
+<div class="page">
+
+    <div class="page-header">
+        <div>
+            <h1>Journal d'activités</h1>
+            <p>Historique complet des actions sur la plateforme</p>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-bar">
+        <div class="search-box">
+            <span>🔍</span>
+            <input type="text" placeholder="Rechercher une action, un utilisateur..." [(ngModel)]="searchTerm"
+                (ngModelChange)="page=0; applyFilters()" />
+        </div>
+        <div class="filter-tabs">
+            <button [class.active]="severityFilter==='ALL'"
+                (click)="severityFilter='ALL';     page=0; applyFilters()">Tous</button>
+            <button [class.active]="severityFilter==='SUCCESS'"
+                (click)="severityFilter='SUCCESS'; page=0; applyFilters()">✅ Succès</button>
+            <button [class.active]="severityFilter==='INFO'"
+                (click)="severityFilter='INFO';    page=0; applyFilters()">ℹ️ Info</button>
+            <button [class.active]="severityFilter==='WARNING'"
+                (click)="severityFilter='WARNING'; page=0; applyFilters()">⚠️ Warning</button>
+            <button [class.active]="severityFilter==='ERROR'"
+                (click)="severityFilter='ERROR';   page=0; applyFilters()">🔴 Erreur</button>
+        </div>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading-state" *ngIf="loading">
+        <div class="spinner"></div>
+        <p>Chargement...</p>
+    </div>
+
+    <!-- Timeline -->
+    <div class="timeline" *ngIf="!loading">
+        <div class="log-entry" *ngFor="let log of filtered" [ngClass]="log.severity.toLowerCase()">
+            <div class="entry-icon">{{ severityIcon(log.severity) }}</div>
+            <div class="entry-body">
+                <div class="entry-header">
+                    <span class="action">{{ log.action }}</span>
+                    <span class="badge" [ngClass]="log.severity.toLowerCase()">{{ log.severity }}</span>
+                    <span class="time">{{ log.timestamp | date:'dd/MM/yyyy HH:mm' }}</span>
+                </div>
+                <p class="description">{{ log.description }}</p>
+                <div class="entry-meta">
+                    <span class="by">👤 {{ log.performedBy }}</span>
+                    <span class="role-tag">{{ log.role }}</span>
+                    <span class="ip" *ngIf="log.ip">🌐 {{ log.ip }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="empty-state" *ngIf="filtered.length === 0">
+            <div>📋</div>
+            <p>Aucune activité trouvée</p>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="!loading && totalPages > 1">
+        <button [disabled]="page === 0" (click)="prevPage()">← Précédent</button>
+        <span>Page {{ page + 1 }} / {{ totalPages }}</span>
+        <button [disabled]="page === totalPages - 1" (click)="nextPage()">Suivant →</button>
+    </div>
+</div>
