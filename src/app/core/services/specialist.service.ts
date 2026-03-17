@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { Specialist } from '../../features/specialists/specialists.component';
+import { Specialist } from '../../modules/admin/specialists/specialists.component';
 
 @Injectable({
   providedIn: 'root'
@@ -23,12 +23,12 @@ export class SpecialistService {
           return response.data.content;
         }
 
-        // Cas 2: response.data est un tableau
+
         if (response?.success && Array.isArray(response.data)) {
           return response.data;
         }
 
-        // Cas 3: response.data est un objet (clés = ids, valeurs = spécialistes)
+
         if (response?.success && response?.data && typeof response.data === 'object') {
           const specialistsArray = Object.values(response.data);
           if (specialistsArray.length > 0) {
