@@ -1,0 +1,31 @@
+<!-- navbar.component.html -->
+<nav class="top-nav" [class.scrolled]="scrolled()">
+
+  <!-- Logo — 3 clicks secrets -->
+  <a class="nav-logo" (click)="handleLogoClick($event)">
+    <div class="logo-mark">C</div>
+    <span class="logo-text">CARTAS</span>
+  </a>
+
+  <div class="nav-links">
+    <a (click)="scrollTo('intro-section')">Intro</a>
+    <a (click)="scrollTo('modules')">Modules</a>
+    <a (click)="scrollTo('herbier')">Herbier</a>
+    <a (click)="scrollTo('specialists')">Spécialistes</a>
+    <a (click)="scrollTo('coming-soon')">À venir</a>
+    <a (click)="scrollTo('testimonials')">Avis</a>
+  </div>
+
+  <div class="nav-right">
+    <!-- Btn Admin secret -->
+    @if (adminVisible()) {
+      <button class="btn-admin" (click)="goAdmin()">
+        🔐 Admin
+      </button>
+    }
+    <button class="nav-cta" (click)="scrollTo('download')">
+      📱 Télécharger
+    </button>
+  </div>
+
+</nav>

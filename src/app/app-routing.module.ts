@@ -2,17 +2,20 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-  // Redirection par défaut
-  { path: '', redirectTo: '/admin/authSuper/register', pathMatch: 'full' },
+  // ✅ Landing page — route racine
+  {
+    path: '',
+    loadChildren: () => import('./modules/landing/landing.module').then((m) => m.LandingModule),
+  },
 
-  // Module Admin (TOUT ton backoffice)
+  // ✅ Admin backoffice
   {
     path: 'admin',
     loadChildren: () => import('./modules/admin/admin.module').then((m) => m.AdminModule),
   },
 
-  // Page 404 — redirectTo vers login, PAS vers /404 !
-  { path: '**', redirectTo: '/admin/authSuper/register' },
+  // ✅ 404 → landing
+  { path: '**', redirectTo: '' },
 ];
 
 @NgModule({

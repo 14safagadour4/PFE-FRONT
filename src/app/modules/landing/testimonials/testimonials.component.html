@@ -1,0 +1,24 @@
+<section id="testimonials" class="testi-section">
+
+  <div class="testi-header">
+    <span class="sec-tag">Témoignages</span>
+    <h2 class="sec-title">Ce qu'elles <em>disent</em></h2>
+  </div>
+
+  <div class="testi-grid">
+    @for (t of testimonials; track t.name) {
+      <div class="testi-card">
+        <span class="testi-stars">{{ t.stars }}</span>
+        <p class="testi-text">"{{ t.text }}"</p>
+        <div class="testi-author">
+          <div class="testi-avatar">{{ t.initial }}</div>
+          <div>
+            <span class="testi-name">{{ t.name }}</span>
+            <span class="testi-city">{{ t.city }}</span>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+</section>
