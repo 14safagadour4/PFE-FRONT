@@ -1,0 +1,177 @@
+<!-- intro.component.html -->
+<section #introSection class="intro-section" [class.is-visible]="isVisible">
+  <div class="intro-container">
+
+    <!-- Colonne gauche: Image -->
+    <div class="intro-image-column" [class.animate-in]="isVisible">
+      <div class="image-wrapper">
+        <img [src]="imageUrl" alt="Plantes médicinales tunisiennes" class="herb-image">
+        <div class="image-glow"></div>
+        <div class="plant-tags">
+          <span class="tag">🌿 CANDY CUMIN</span>
+          <span class="tag">🍃 PEPPERMINT</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Colonne droite: Contenu -->
+    <div class="intro-content-column" [class.animate-in]="isVisible">
+      <div class="logo-section" [class.animate-stagger-1]="isVisible">
+        <h2 class="logo">CARTAS</h2>
+      </div>
+
+      <h1 class="main-title" [class.animate-stagger-2]="isVisible">
+        L'Héritage & L'Innovation <br>
+        <span class="accent-word">au sein de la nature</span>
+      </h1>
+
+      <div class="tabs-container" [class.animate-stagger-3]="isVisible">
+        <button class="tab-btn" [class.active]="activeTab === 'problem'" (click)="setActiveTab('problem')">
+          <span class="tab-number">01</span>
+          <span class="tab-label">Problème</span>
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'solution'" (click)="setActiveTab('solution')">
+          <span class="tab-number">02</span>
+          <span class="tab-label">Solution</span>
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'benefits'" (click)="setActiveTab('benefits')">
+          <span class="tab-number">03</span>
+          <span class="tab-label">Avantages</span>
+        </button>
+      </div>
+
+      <div class="tabs-content" [class.animate-stagger-4]="isVisible">
+        <!-- Problème -->
+        <div class="tab-panel" [class.active]="activeTab === 'problem'">
+          <div class="content-card">
+            <p class="card-quote">
+              "Nos grands-mères connaissaient les secrets des plantes.<br>
+              Aujourd'hui, ces savoirs ancestraux se perdent."
+            </p>
+            <div class="stats-modern">
+              <div class="stat-modern">
+                <div class="stat-value">80%</div>
+                <div class="stat-info">
+                  <div class="stat-title">des savoirs traditionnels</div>
+                  <div class="stat-desc">menacés de disparition</div>
+                </div>
+              </div>
+              <div class="stat-modern">
+                <div class="stat-value">70%</div>
+                <div class="stat-info">
+                  <div class="stat-title">des femmes actives</div>
+                  <div class="stat-desc">souffrent de stress chronique</div>
+                </div>
+              </div>
+              <div class="stat-modern">
+                <div class="stat-value">✗</div>
+                <div class="stat-info">
+                  <div class="stat-title">remèdes non vérifiés</div>
+                  <div class="stat-desc">circulent en ligne</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Solution -->
+        <div class="tab-panel" [class.active]="activeTab === 'solution'">
+          <div class="content-card">
+            <p class="card-quote">
+              CARTAS préserve l'héritage botanique tunisien en combinant<br>
+              sagesse ancestrale et intelligence artificielle.
+            </p>
+            <div class="solution-modern">
+              <div class="solution-item">
+                <span class="solution-icon">📚</span>
+                <span>Préserver les savoirs</span>
+              </div>
+              <div class="solution-item">
+                <span class="solution-icon">🤖</span>
+                <span>Enrichir avec l'IA</span>
+              </div>
+              <div class="solution-item">
+                <span class="solution-icon">👥</span>
+                <span>Connecter aux experts</span>
+              </div>
+              <div class="solution-item">
+                <span class="solution-icon">🌿</span>
+                <span>Recommander des solutions</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Avantages -->
+        <div class="tab-panel" [class.active]="activeTab === 'benefits'">
+          <div class="content-card">
+            <p class="card-quote">
+              Pourquoi des milliers d'utilisateurs nous font confiance.
+            </p>
+            <div class="benefits-modern">
+              <div class="benefit-item">
+                <span class="benefit-icon">🔬</span>
+                <div class="benefit-info">
+                  <strong>Vérifié</strong>
+                  <span>Validé scientifiquement</span>
+                </div>
+              </div>
+              <div class="benefit-item">
+                <span class="benefit-icon">🌿</span>
+                <div class="benefit-info">
+                  <strong>100% Naturel</strong>
+                  <span>Zéro produit chimique</span>
+                </div>
+              </div>
+              <div class="benefit-item">
+                <span class="benefit-icon">👨‍⚕️</span>
+                <div class="benefit-info">
+                  <strong>Expert</strong>
+                  <span>Spécialistes certifiés</span>
+                </div>
+              </div>
+              <div class="benefit-item">
+                <span class="benefit-icon">🎯</span>
+                <div class="benefit-info">
+                  <strong>Personnalisé</strong>
+                  <span>Adapté à votre profil</span>
+                </div>
+              </div>
+              <div class="benefit-item">
+                <span class="benefit-icon">🇹🇳</span>
+                <div class="benefit-info">
+                  <strong>Local</strong>
+                  <span>Plantes de Tunisie</span>
+                </div>
+              </div>
+              <div class="benefit-item">
+                <span class="benefit-icon">💡</span>
+                <div class="benefit-info">
+                  <strong>Intelligent</strong>
+                  <span>IA + Sagesse ancestrale</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CTA Button -->
+      <button class="cta-btn" [class.animate-stagger-5]="isVisible" (click)="scrollToModules()">
+        Explorer CARTAS
+        <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- Éléments décoratifs -->
+  <div class="decorative-elements">
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+  </div>
+</section>

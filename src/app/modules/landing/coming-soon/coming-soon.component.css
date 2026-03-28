@@ -1,0 +1,158 @@
+:host {
+  display: block;
+  width: 100%;
+  min-height: auto;
+  padding: 80px 24px;
+  font-family: 'Josefin Sans', sans-serif;
+  background: #FAF6F0;
+}
+
+/* ===== SECTION PRINCIPALE ===== */
+.coming-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ===== EN-TÊTE ===== */
+.coming-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.sec-tag {
+  font-size: 10px;
+  letter-spacing: 3.5px;
+  color: #7D3050;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 14px;
+}
+
+.sec-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 48px;
+  font-weight: 300;
+  color: #1A0A12;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+
+.sec-title em {
+  color: #7D3050;
+  font-style: italic;
+}
+
+.sec-desc {
+  font-size: 13.5px;
+  color: #8B6070;
+  line-height: 1.85;
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+/* ===== GRILLE DES CARTES ===== */
+.coming-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-top: 40px;
+}
+
+@media (max-width: 768px) {
+  .coming-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== CARTE INDIVIDUELLE ===== */
+.coming-card {
+  background: white;
+  border-radius: 24px;
+  padding: 32px;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+  border: 1px solid rgba(125,48,80,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.coming-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(125,48,80,0.15);
+  border-color: rgba(125,48,80,0.2);
+}
+
+/* Badge "BIENTÔT" */
+.coming-ribbon {
+  position: absolute;
+  top: 16px;
+  right: 24px;
+  background: #7D3050;
+  color: white;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 30px;
+  font-weight: 600;
+}
+
+/* Icône */
+.coming-icon {
+  font-size: 42px;
+  margin-bottom: 16px;
+  display: block;
+}
+
+/* Nom du module */
+.coming-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: #1A0A12;
+  margin-bottom: 12px;
+}
+
+/* Description */
+.coming-desc {
+  font-size: 13px;
+  color: #8B6070;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ===== STYLES POUR LE MARQUEE (si utilisé) ===== */
+.marquee-strip {
+  background: #7D3050;
+  padding: 14px 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+  margin-top: 40px;
+}
+
+.marquee-track {
+  display: flex;
+  gap: 0;
+  animation: marqueeScroll 28s linear infinite;
+  white-space: nowrap;
+}
+
+.mi {
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  color: rgba(255,255,255,0.85);
+  text-transform: uppercase;
+  padding: 0 28px;
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+.sep {
+  color: #C9A96E;
+  margin: 0 6px;
+}
+
+@keyframes marqueeScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}

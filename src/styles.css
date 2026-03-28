@@ -1,1 +1,75 @@
-/* You can add global styles to this file, and also import other style files */
+/* ══════════════════════════════════════════════════════
+   STYLES.CSS — Cartas Global
+   ══════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Josefin+Sans:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+  --rose:       #7D3050;
+  --rose-light: #A8547A;
+  --rose-pale:  #F5E8EE;
+  --rose-deep:  #5C1F3A;
+  --gold:       #C9A96E;
+  --gold-light: #E8D5A3;
+  --cream:      #FAF6F0;
+  --dark:       #1A0A12;
+  --dark-mid:   #2D1520;
+  --sage:       #6B9E6F;
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Josefin Sans', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+app-root {
+  display: block;
+  width: 100%;
+}
+
+app-home,
+app-navbar,
+app-hero,
+app-modules-section,
+app-herbier-section,
+app-specialists-section,
+app-coming-soon,
+app-testimonials,
+app-download-section,
+app-footer-section {
+  display: block;
+  width: 100%;
+}
+
+app-layout {
+  min-height: 100vh;     /* ← minimum 100%, pas fixe */
+  height: auto;           /* ← s'adapte au contenu */
+  overflow: auto;         /* ← permet le scroll */
+}
+app-root, app-layout, app-home {
+  height: auto !important;
+  min-height: 100vh !important;
+  overflow: auto !important;
+}
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(125,48,80,0.25);
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(125,48,80,0.45);
+}

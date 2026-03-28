@@ -1,0 +1,110 @@
+<div class="bird-world" id="birdWorld">
+
+  <!-- Tooltip -->
+  <div class="bird-tooltip" *ngIf="tooltipVisible">
+    💬 Une question ? Je suis là !
+  </div>
+
+  <!-- Bird Button -->
+  <div class="bird-btn" (click)="toggleChat()">
+    <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" width="68" height="68">
+      <circle cx="40" cy="44" r="28" fill="rgba(194,24,91,0.12)"/>
+      <ellipse cx="40" cy="46" rx="18" ry="14" fill="url(#bodyGrad)"/>
+      <circle cx="52" cy="36" r="12" fill="url(#headGrad)"/>
+      <ellipse class="wing-left" cx="26" cy="44" rx="14" ry="7"
+               fill="url(#wingGrad)" transform="rotate(-15 26 44)"/>
+      <ellipse class="wing-right" cx="54" cy="42" rx="14" ry="7"
+               fill="url(#wingGrad2)" transform="rotate(15 54 42)"/>
+      <polygon points="62,34 70,37 62,40" fill="#C9A96E"/>
+      <circle cx="55" cy="34" r="3.5" fill="white"/>
+      <circle cx="56" cy="34" r="2" fill="#1A0A12"/>
+      <circle cx="57" cy="33" r="0.8" fill="white"/>
+      <ellipse cx="24" cy="52" rx="10" ry="4"
+               fill="url(#tailGrad)" transform="rotate(20 24 52)"/>
+      <!-- Sparkles animés -->
+      <circle cx="30" cy="28" r="2" fill="#E8C96A" opacity="0.8">
+        <animate attributeName="opacity" values="0.8;0;0.8" dur="1.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="18" cy="38" r="1.5" fill="#C2185B" opacity="0.7">
+        <animate attributeName="opacity" values="0.7;0;0.7" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+      </circle>
+      <defs>
+        <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#C2185B"/>
+          <stop offset="100%" stop-color="#5C1F3A"/>
+        </linearGradient>
+        <linearGradient id="headGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#E91E8C"/>
+          <stop offset="100%" stop-color="#C2185B"/>
+        </linearGradient>
+        <linearGradient id="wingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#9C1A5C"/>
+          <stop offset="100%" stop-color="#7D3050" stop-opacity="0.7"/>
+        </linearGradient>
+        <linearGradient id="wingGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#9C1A5C"/>
+          <stop offset="100%" stop-color="#7D3050" stop-opacity="0.7"/>
+        </linearGradient>
+        <linearGradient id="tailGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#C9A96E"/>
+          <stop offset="100%" stop-color="#A07840"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  </div>
+
+  <!-- Chat Window -->
+  <div class="bird-chat" [class.open]="chatOpen">
+
+    <!-- Header -->
+    <div class="chat-head">
+      <div class="chat-bird-icon">🌿</div>
+      <div class="chat-head-info">
+        <h4>Support CARTAS</h4>
+        <span><span class="online-dot"></span> En ligne</span>
+      </div>
+      <button class="chat-close" (click)="toggleChat()">✕</button>
+    </div>
+
+    <!-- Messages -->
+    <div class="chat-msgs" #msgContainer>
+      <ng-container *ngFor="let msg of messages">
+        <div class="msg" [class.user]="msg.role === 'user'">
+          <div class="msg-avatar" *ngIf="msg.role === 'bot'">🌿</div>
+          <div class="msg-bubble" [innerHTML]="formatText(msg.text)"></div>
+          <div class="msg-avatar user-av" *ngIf="msg.role === 'user'">S</div>
+        </div>
+      </ng-container>
+
+      <!-- Typing -->
+      <div class="msg bot" *ngIf="isTyping">
+        <div class="msg-avatar">🌿</div>
+        <div class="typing-bubble">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick replies -->
+    <div class="quick-replies">
+      <button class="qr-btn" (click)="sendQuick('Nos services')">🌿 Services</button>
+      <button class="qr-btn" (click)="sendQuick('Télécharger app')">📱 App</button>
+      <button class="qr-btn" (click)="sendQuick('Contacter équipe')">📩 Contact</button>
+      <button class="qr-btn" (click)="sendQuick('C\'est quoi CARTAS')">ℹ️ À propos</button>
+    </div>
+
+    <!-- Input -->
+    <div class="chat-input-row">
+      <input
+        class="chat-input"
+        [(ngModel)]="inputText"
+        placeholder="Posez votre question…"
+        (keydown.enter)="sendMsg()"
+      />
+      <button class="chat-send" (click)="sendMsg()">➤</button>
+    </div>
+
+  </div>
+</div>

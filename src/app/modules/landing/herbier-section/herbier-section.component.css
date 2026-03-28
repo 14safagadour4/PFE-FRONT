@@ -1,0 +1,32 @@
+:host { --gold:#C9A96E; --rose:#7D3050; }
+
+.herbier-section {
+  background: linear-gradient(135deg, #1A0A12 0%, #2D1520 100%);
+  padding: 100px 80px; position: relative; overflow: hidden;
+  font-family: 'Josefin Sans', sans-serif;
+  &::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 70% 50%, rgba(201,169,110,0.05) 0%, transparent 70%); pointer-events:none; }
+  @media (max-width: 768px) { padding: 60px 24px; }
+}
+
+.h-header { margin-bottom: 50px; position: relative; z-index: 1; }
+.sec-tag  { font-size:10px; letter-spacing:3.5px; color:var(--gold); text-transform:uppercase; margin-bottom:14px; display:block; }
+.sec-title { font-family:'Cormorant Garamond',serif; font-size:44px; font-weight:300; color:white; line-height:1.2; margin-bottom:14px; em { color:var(--gold); font-style:italic; } }
+.sec-desc  { font-size:13.5px; color:rgba(255,255,255,0.45); line-height:1.85; max-width:520px; }
+
+.plants-grid {
+  display: grid; grid-template-columns: repeat(5,1fr); gap: 16px; position: relative; z-index: 1;
+  @media (max-width: 1000px) { grid-template-columns: repeat(3,1fr); }
+  @media (max-width: 600px)  { grid-template-columns: repeat(2,1fr); }
+}
+
+.plant-card {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px; padding: 24px 18px; text-align: center; transition: all .3s; cursor: pointer;
+  &:hover { background:rgba(201,169,110,0.08); border-color:rgba(201,169,110,0.25); transform:translateY(-4px); }
+}
+
+.p-emoji   { font-size:36px; display:block; margin-bottom:12px; }
+.p-name    { font-family:'Cormorant Garamond',serif; font-size:18px; color:#fff; margin-bottom:4px; }
+.p-sci     { font-size:10px; color:rgba(255,255,255,0.3); font-style:italic; display:block; margin-bottom:10px; }
+.p-benefit { font-size:11px; color:rgba(255,255,255,0.45); line-height:1.6; margin-bottom:12px; }
+.p-tag     { display:inline-block; background:rgba(201,169,110,0.12); border:1px solid rgba(201,169,110,0.2); color:var(--gold); font-size:8.5px; letter-spacing:1.5px; text-transform:uppercase; padding:4px 10px; border-radius:20px; }

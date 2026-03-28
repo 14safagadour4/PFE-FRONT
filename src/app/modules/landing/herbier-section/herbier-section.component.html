@@ -1,0 +1,18 @@
+<section id="herbier" class="herbier-section">
+  <div class="h-header">
+    <span class="sec-tag">Herbier Digital Khaïel</span>
+    <h2 class="sec-title">Les plantes <em>emblématiques</em></h2>
+    <p class="sec-desc">Découvrez le savoir ancestral tunisien codifié en fiches interactives enrichies.</p>
+  </div>
+  <div class="plants-grid">
+    @for (p of plants; track p.name) {
+      <div class="plant-card">
+        <span class="p-emoji">{{ p.emoji }}</span>
+        <div class="p-name">{{ p.name }}</div>
+        <span class="p-sci">{{ p.sci }}</span>
+        <p class="p-benefit">{{ p.benefit }}</p>
+        <span class="p-tag">{{ p.tag }}</span>
+      </div>
+    }
+  </div>
+</section>

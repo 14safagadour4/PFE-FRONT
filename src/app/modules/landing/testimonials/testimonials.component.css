@@ -1,0 +1,53 @@
+:host {
+  --rose: #7D3050; --rose-light: #A8547A; --rose-pale: #F5E8EE;
+  --gold: #C9A96E; --cream: #FAF6F0; --text: #3D2030; --text-muted: #8B6070;
+}
+
+.testi-section {
+  background: white; padding: 100px 80px;
+  font-family: 'Josefin Sans', sans-serif;
+  @media (max-width: 768px) { padding: 60px 24px; }
+}
+
+.testi-header { text-align: center; margin-bottom: 60px; }
+
+.sec-tag { font-size: 10px; letter-spacing: 3.5px; color: var(--gold); text-transform: uppercase; display: block; margin-bottom: 14px; }
+
+.sec-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 44px; font-weight: 300; color: var(--rose); line-height: 1.2;
+  em { color: var(--rose-light); font-style: italic; }
+}
+
+.testi-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  @media (max-width: 900px) { grid-template-columns: 1fr; }
+}
+
+.testi-card {
+  background: var(--cream); border-radius: 18px; padding: 32px;
+  border: 1px solid rgba(125,48,80,0.08); transition: all .3s;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 40px rgba(125,48,80,0.1);
+    border-color: rgba(125,48,80,0.16);
+  }
+}
+
+.testi-stars { color: var(--gold); font-size: 14px; display: block; margin-bottom: 16px; letter-spacing: 2px; }
+
+.testi-text { font-size: 13px; color: var(--text); line-height: 1.8; margin-bottom: 22px; font-style: italic; }
+
+.testi-author { display: flex; align-items: center; gap: 12px; }
+
+.testi-avatar {
+  width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--rose-pale), var(--rose-light));
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif; font-size: 18px;
+  color: white; font-weight: 600;
+}
+
+.testi-name { font-size: 13px; font-weight: 600; color: var(--text); display: block; }
+.testi-city { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; }
