@@ -47,6 +47,8 @@ export class UsersComponent implements OnInit {
   }
 
   initials(u: AppUser): string {
-    return (u.firstName[0] + u.lastName[0]).toUpperCase();
+    const f = u?.firstName?.[0] || '';
+    const l = u?.lastName?.[0] || '';
+    return (f + l).toUpperCase() || 'U';
   }
 }

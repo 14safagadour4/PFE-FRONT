@@ -27,15 +27,15 @@
         <div class="stat-card validated">
             <div class="stat-icon">✅</div>
             <div class="stat-info">
-                <span class="stat-num">{{ stats.validated }}</span>
-                <span class="stat-label">Validés</span>
+                <span class="stat-num">{{ stats.active }}</span>
+                <span class="stat-label">Actifs</span>
             </div>
         </div>
         <div class="stat-card rejected">
             <div class="stat-icon">❌</div>
             <div class="stat-info">
-                <span class="stat-num">{{ stats.rejected }}</span>
-                <span class="stat-label">Rejetés</span>
+                <span class="stat-num">{{ stats.refused }}</span>
+                <span class="stat-label">Refusés</span>
             </div>
         </div>
     </div>
@@ -48,12 +48,9 @@
         </div>
         <div class="filter-tabs">
             <button [class.active]="statusFilter === 'ALL'" (click)="statusFilter='ALL'; applyFilters()">Tous</button>
-            <button [class.active]="statusFilter === 'PENDING'" (click)="statusFilter='PENDING'; applyFilters()">En
-                attente</button>
-            <button [class.active]="statusFilter === 'VALIDATED'"
-                (click)="statusFilter='VALIDATED'; applyFilters()">Validés</button>
-            <button [class.active]="statusFilter === 'REJECTED'"
-                (click)="statusFilter='REJECTED'; applyFilters()">Rejetés</button>
+            <button [class.active]="statusFilter === 'PENDING'" (click)="statusFilter='PENDING'; applyFilters()">En attente</button>
+            <button [class.active]="statusFilter === 'ACTIVE'" (click)="statusFilter='ACTIVE'; applyFilters()">Actifs</button>
+            <button [class.active]="statusFilter === 'REFUSED'" (click)="statusFilter='REFUSED'; applyFilters()">Refusés</button>
         </div>
     </div>
 
@@ -74,14 +71,27 @@
                 <h3>{{ s.firstName }} {{ s.lastName }}</h3>
                 <p class="specialty">{{ s.specialty }}</p>
                 <p class="email">{{ s.email }}</p>
-                <p class="date">Inscrit le {{ s.createdAt | date:'dd/MM/yyyy' }}</p>
+                <p class="date">Inscrit le {{ s.joinedAt | date:'dd/MM/yyyy' }}</p>
             </div>
-            <div class="card-actions" *ngIf="s.status === 'PENDING'" (click)="$event.stopPropagation()">
-                <button class="btn-validate" (click)="validate(s.id)">✓ Valider</button>
-                <button class="btn-reject" (click)="reject(s.id)">✗ Rejeter</button>
-            </div>
-            <div class="card-validated" *ngIf="s.status === 'VALIDATED'">
-                <span>✓ Validé le {{ s.validatedAt | date:'dd/MM/yyyy' }}</span>
+            <div class="card-actions" style="margin-top: 10px; display: flex; gap: 8px;" (click)="$event.stopPropagation()">
+                <!-- Voir Document -->
+                <button class="btn-icon" *ngIf="s.certificateUrl" (click)="viewDocument(s)" title="Voir Diplôme">
+                    📄
+                </button>
+
+                <!-- Pending Actions -->
+                <ng-container *ngIf="s.status === 'PENDING'">
+                    <button class="btn-action accept" (click)="validate(s)" title="Accepter">
+                        ✅
+                    </button>
+                    <button class="btn-action refuse" (click)="openRefusalPrompt(s)" title="Refuser">
+                        ❌
+                    </button>
+                </ng-container>
+
+                <div class="validated-badge" *ngIf="s.status === 'ACTIVE'">
+                    <span>✓ Actif</span>
+                </div>
             </div>
         </div>
 
@@ -106,15 +116,47 @@
             <div class="modal-body">
                 <div class="info-row"><span>Email</span><strong>{{ selectedSpecialist.email }}</strong></div>
                 <div class="info-row"><span>Spécialité</span><strong>{{ selectedSpecialist.specialty }}</strong></div>
-                <div class="info-row"><span>Inscription</span><strong>{{ selectedSpecialist.createdAt |
+                <div class="info-row"><span>Inscription</span><strong>{{ selectedSpecialist.joinedAt |
                         date:'dd/MM/yyyy' }}</strong></div>
                 <div class="info-row" *ngIf="selectedSpecialist.validatedAt">
                     <span>Validation</span><strong>{{ selectedSpecialist.validatedAt | date:'dd/MM/yyyy' }}</strong>
                 </div>
+                <!-- Refusal Reason -->
+                <div class="refusal-info" *ngIf="selectedSpecialist.status === 'REFUSED' && selectedSpecialist.refusalReason">
+                    <p class="refusal-label">Motif du refus :</p>
+                    <p class="refusal-text">{{ selectedSpecialist.refusalReason }}</p>
+                </div>
             </div>
-            <div class="modal-actions" *ngIf="selectedSpecialist.status === 'PENDING'">
-                <button class="btn-validate" (click)="validate(selectedSpecialist.id); closeModal()">✓ Valider</button>
-                <button class="btn-reject" (click)="reject(selectedSpecialist.id); closeModal()">✗ Rejeter</button>
+        </div>
+    </div>
+
+    <!-- Refusal Reason Modal -->
+    <div class="modal-overlay" *ngIf="showRefusalModal" (click)="showRefusalModal = false">
+        <div class="modal small" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2>Motif du refus</h2>
+                <button class="modal-close" (click)="showRefusalModal = false">×</button>
+            </div>
+            <div class="modal-body">
+                <p>Veuillez indiquer la raison du refus pour {{ selectedSpecialist?.firstName }} :</p>
+                <textarea [(ngModel)]="refusalReason" placeholder="Motif du refus..." rows="4"></textarea>
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                    <button class="btn-secondary" (click)="showRefusalModal = false">Annuler</button>
+                    <button class="btn-primary refuse" [disabled]="!refusalReason.trim()" (click)="confirmRefusal()">Confirmer le refus</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Document Viewer Modal -->
+    <div class="modal-overlay" *ngIf="showDocModal" (click)="closeDocModal()">
+        <div class="modal large doc-modal" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2>Visualisation du Document</h2>
+                <button class="modal-close" (click)="closeDocModal()">×</button>
+            </div>
+            <div class="doc-container" style="height: 70vh; background: #f5f5f5; overflow: hidden; border-radius: 0 0 20px 20px;">
+                <iframe *ngIf="safeDocUrl" [src]="safeDocUrl" width="100%" height="100%" frameborder="0"></iframe>
             </div>
         </div>
     </div>
