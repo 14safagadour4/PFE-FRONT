@@ -44,9 +44,8 @@
         <table class="tbl">
             <thead>
                 <tr>
-                    <th>Utilisateur</th>
+                    <th>Utilisatrice</th>
                     <th>Email</th>
-                    <th>Rôle</th>
                     <th>Statut</th>
                     <th>Inscription</th>
                     <th>Actions</th>
@@ -60,27 +59,32 @@
                             <div class="u-av" [class.v]="u.id % 2 === 0" [class.g]="u.id % 2 !== 0">
                                 {{ initials(u) }}
                             </div>
-                            {{ u.firstName }} {{ u.lastName }}
+                            <div class="u-info">
+                                <div class="u-name">{{ u.firstName }} {{ u.lastName }}</div>
+                                <div class="u-id">ID: #{{ u.id }}</div>
+                            </div>
                         </div>
                     </td>
                     <td class="td-muted">{{ u.email }}</td>
                     <td>
-                        <span class="status" [class.act]="u.status === 'ACTIVE'" [class.blk]="u.status === 'BLOCKED'"
-                            [class.pnd]="u.status === 'ACTIVE'">
+                        <span class="status-badge" [ngClass]="u.status.toLowerCase()">
                             {{ statusLabel(u.status) }}
                         </span>
                     </td>
                     <td class="td-muted td-mono">
-                        {{ u.createdAt | date:'dd/MM/yy' }}
+                        {{ u.createdAt | date:'dd/MM/yyyy' }}
                     </td>
                     <td>
                         <div class="acts">
-
                             @if (u.status === 'ACTIVE') {
-                            <button class="act-btn bl" (click)="block(u.id)">⏸ Bloquer</button>
+                            <button class="btn-action block" (click)="block(u.id)" title="Bloquer cette utilisatrice">
+                                🚫 Bloquer
+                            </button>
                             }
                             @if (u.status === 'BLOCKED') {
-                            <button class="act-btn ok" (click)="unblock(u.id)">▶ Débloquer</button>
+                            <button class="btn-action unblock" (click)="unblock(u.id)" title="Débloquer cette utilisatrice">
+                                ✅ Débloquer
+                            </button>
                             }
                         </div>
                     </td>

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { TherapistService } from '../../../core/services/therapist.service';
 
 export interface Therapist {
   id: number;
@@ -10,12 +12,14 @@ export interface Therapist {
   phone?: string;
   specialization: string;
   yearsExperience: number;
-  status: 'ACTIVE' | 'INACTIVE' | 'PENDING';
+  status: 'ACTIVE' | 'INACTIVE' | 'PENDING' | 'REFUSED';
   rating?: number;
   sessionsCount: number;
   joinedAt: string;
   bio?: string;
   languages?: string[];
+  certificateUrl?: string;
+  refusalReason?: string;
 }
 
 @Component({
@@ -34,7 +38,19 @@ export class TherapistsComponent implements OnInit {
   selectedTherapist: Therapist | null = null;
   showModal = false;
 
+  // New states for Refusal and Document Modal
+  showRefusalModal = false;
+  refusalReason = '';
+  
+  showDocModal = false;
+  safeDocUrl: SafeResourceUrl | null = null;
+
   stats = { total: 0, active: 0, inactive: 0, avgRating: 0 };
+
+  constructor(
+    private therapistService: TherapistService,
+    private sanitizer: DomSanitizer
+  ) {}
 
   ngOnInit() {
     this.load();
@@ -42,12 +58,18 @@ export class TherapistsComponent implements OnInit {
 
   load() {
     this.loading = true;
-    setTimeout(() => {
-      this.therapists = this.mockData();
-      this.applyFilters();
-      this.computeStats();
-      this.loading = false;
-    }, 600);
+    this.therapistService.getAll().subscribe({
+      next: (data) => {
+        this.therapists = data;
+        this.applyFilters();
+        this.computeStats();
+        this.loading = false;
+      },
+      error: () => {
+        this.therapists = [];
+        this.loading = false;
+      }
+    });
   }
 
   computeStats() {
@@ -78,8 +100,46 @@ export class TherapistsComponent implements OnInit {
   openModal(t: Therapist) { this.selectedTherapist = t; this.showModal = true; }
   closeModal() { this.showModal = false; this.selectedTherapist = null; }
 
+  // Actions
+  acceptTherapist(t: Therapist) {
+    if (!confirm(`Valider l'inscription de ${t.firstName} ?`)) return;
+    this.therapistService.validate(t.id).subscribe(() => {
+      t.status = 'ACTIVE';
+      this.computeStats();
+    });
+  }
+
+  openRefusalPrompt(t: Therapist) {
+    this.selectedTherapist = t;
+    this.refusalReason = '';
+    this.showRefusalModal = true;
+  }
+
+  confirmRefusal() {
+    if (!this.selectedTherapist || !this.refusalReason.trim()) return;
+    this.therapistService.refuse(this.selectedTherapist.id, this.refusalReason).subscribe(() => {
+      this.selectedTherapist!.status = 'REFUSED';
+      this.selectedTherapist!.refusalReason = this.refusalReason;
+      this.showRefusalModal = false;
+      this.computeStats();
+    });
+  }
+
+  viewDocument(t: Therapist) {
+    if (!t.certificateUrl) return;
+    // Assuming backend serves uploads at this URL
+    const url = `http://localhost:8080/uploads/${t.certificateUrl}`;
+    this.safeDocUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    this.showDocModal = true;
+  }
+
+  closeDocModal() {
+    this.showDocModal = false;
+    this.safeDocUrl = null;
+  }
+
   initials(t: Therapist) { return `${t.firstName[0]}${t.lastName[0]}`.toUpperCase(); }
-  stars(n: number) { return Array(Math.round(n)).fill('★'); }
+  stars(n: number) { return Array(Math.round(n || 0)).fill('★'); }
 
   mockData(): Therapist[] {
     return [

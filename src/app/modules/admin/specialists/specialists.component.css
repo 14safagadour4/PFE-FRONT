@@ -329,8 +329,8 @@
   border: 1px solid;
 
   &.pending  { background: var(--warning-s);  color: var(--warning); border-color: rgba(245,158,11,0.25); }
-  &.validated { background: var(--success-s); color: var(--success); border-color: rgba(78,203,163,0.25); }
-  &.rejected  { background: var(--danger-s);  color: var(--danger);  border-color: rgba(224,92,122,0.25); }
+  &.active   { background: var(--success-s); color: var(--success); border-color: rgba(78,203,163,0.25); }
+  &.refused  { background: var(--danger-s);  color: var(--danger);  border-color: rgba(224,92,122,0.25); }
 }
 
 .card-body {
@@ -367,53 +367,49 @@
   font-family: 'Fira Code', monospace;
 }
 
-/* ── Card actions ────────────────────────────────── */
-.card-actions {
-  display: flex;
-  gap: 8px;
-  padding: 12px 18px;
-  border-top: 1px solid rgba(123,94,167,0.08);
-  background: rgba(0,0,0,0.1);
-}
-
-.btn-validate {
-  flex: 1;
-  padding: 8px 14px;
-  background: var(--success-s);
-  border: 1px solid rgba(78,203,163,0.25);
-  border-radius: var(--radius-sm);
-  color: var(--success);
-  font-family: 'Outfit', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
+/* ── Action Buttons ────────────────────────────── */
+.btn-icon {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  width: 32px; height: 32px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all var(--t) var(--ease-back);
-
-  &:hover {
-    background: rgba(78,203,163,0.18);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(78,203,163,0.2);
+  display: grid;
+  place-items: center;
+  transition: all var(--t);
+  
+  &:hover { 
+    background: var(--violet-soft); 
+    border-color: var(--violet-hi); 
+    color: var(--violet-hi);
+    transform: scale(1.1);
   }
 }
 
-.btn-reject {
-  flex: 1;
-  padding: 8px 14px;
-  background: var(--danger-s);
-  border: 1px solid rgba(224,92,122,0.2);
-  border-radius: var(--radius-sm);
-  color: var(--danger);
-  font-family: 'Outfit', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
+.btn-action {
+  border: none;
+  width: 32px; height: 32px;
+  border-radius: 8px;
   cursor: pointer;
+  display: grid;
+  place-items: center;
   transition: all var(--t) var(--ease-back);
+  
+  &.accept { background: var(--success-s); color: var(--success); }
+  &.refuse { background: var(--danger-s); color: var(--danger); }
+  
+  &:hover { transform: scale(1.2) rotate(8deg); }
+}
 
-  &:hover {
-    background: rgba(224,92,122,0.16);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(224,92,122,0.2);
-  }
+.validated-badge {
+    background: var(--success-s);
+    color: var(--success);
+    border: 1px solid rgba(78,203,163,0.2);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
 }
 
 /* ── Empty state ─────────────────────────────────── */
@@ -513,11 +509,79 @@
   strong { color: var(--text-soft); }
 }
 
-.modal-actions {
-  display: flex;
-  gap: 10px;
-  padding: 16px 24px;
-  border-top: 1px solid var(--border);
+/* ── Refusal Info ──────────────────────────────── */
+.refusal-info {
+  margin-top: 16px;
+  padding: 14px;
+  background: rgba(224,92,122,0.05);
+  border: 1px solid rgba(224,92,122,0.2);
+  border-radius: 12px;
+}
+
+.refusal-label {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--danger);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin: 0 0 4px;
+}
+
+.refusal-text {
+  font-size: 13px;
+  color: var(--text-soft);
+  font-style: italic;
+  margin: 0;
+}
+
+/* ── Modals extra ──────────────────────────────── */
+.modal.small { max-width: 420px; }
+.modal.large.doc-modal { max-width: 1000px; width: 95%; }
+
+.btn-primary.refuse {
+  background: linear-gradient(135deg, #e05c7a, #b03a55);
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all var(--t);
+
+  &:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 12px var(--danger-s); }
+  &:disabled { opacity: .4; cursor: not-allowed; }
+}
+
+.btn-secondary {
+  background: var(--surface2);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all var(--t);
+
+  &:hover { background: var(--surface3); color: var(--text-soft); }
+}
+
+textarea {
+  width: 100%;
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  resize: none;
+  transition: border-color var(--t);
+  box-sizing: border-box;
+
+  &:focus { border-color: var(--danger); }
 }
 
 /* ── Animations ──────────────────────────────────── */
