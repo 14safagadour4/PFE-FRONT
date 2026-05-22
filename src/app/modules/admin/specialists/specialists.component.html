@@ -11,7 +11,7 @@
     <!-- Stats -->
     <div class="stats-row">
         <div class="stat-card total">
-            <div class="stat-icon">👥</div>
+            <div class="stat-icon">🧑‍⚕️</div>
             <div class="stat-info">
                 <span class="stat-num">{{ stats.total }}</span>
                 <span class="stat-label">Total</span>
@@ -48,9 +48,12 @@
         </div>
         <div class="filter-tabs">
             <button [class.active]="statusFilter === 'ALL'" (click)="statusFilter='ALL'; applyFilters()">Tous</button>
-            <button [class.active]="statusFilter === 'PENDING'" (click)="statusFilter='PENDING'; applyFilters()">En attente</button>
-            <button [class.active]="statusFilter === 'ACTIVE'" (click)="statusFilter='ACTIVE'; applyFilters()">Actifs</button>
-            <button [class.active]="statusFilter === 'REFUSED'" (click)="statusFilter='REFUSED'; applyFilters()">Refusés</button>
+            <button [class.active]="statusFilter === 'PENDING'" (click)="statusFilter='PENDING'; applyFilters()">En
+                attente</button>
+            <button [class.active]="statusFilter === 'ACTIVE'"
+                (click)="statusFilter='ACTIVE'; applyFilters()">Actifs</button>
+            <button [class.active]="statusFilter === 'REFUSED'"
+                (click)="statusFilter='REFUSED'; applyFilters()">Refusés</button>
         </div>
     </div>
 
@@ -62,35 +65,60 @@
 
     <!-- Grid -->
     <div class="specialists-grid" *ngIf="!loading">
-        <div class="specialist-card" *ngFor="let s of filtered" (click)="openModal(s)">
-            <div class="card-top">
-                <div class="avatar">{{ initials(s) }}</div>
-                <span class="badge" [ngClass]="s.status.toLowerCase()">{{ s.status }}</span>
+        <div class="specialist-card" *ngFor="let s of filtered" (click)="openModal(s)"
+            [class.card-validated]="s.status === 'ACTIVE'">
+            <div class="card-header">
+                <div class="avatar-wrap">
+                    <div class="avatar">{{ initials(s) }}</div>
+                    <div class="status-dot" [ngClass]="s.status.toLowerCase()"></div>
+                </div>
+                <div class="header-info">
+                    <h3>{{ s.firstName }} {{ s.lastName }}</h3>
+                    <div class="badge-wrap">
+                        <span class="badge" [ngClass]="s.status.toLowerCase()">{{ s.status }}</span>
+                    </div>
+                </div>
             </div>
+
             <div class="card-body">
-                <h3>{{ s.firstName }} {{ s.lastName }}</h3>
-                <p class="specialty">{{ s.specialty }}</p>
-                <p class="email">{{ s.email }}</p>
-                <p class="date">Inscrit le {{ s.joinedAt | date:'dd/MM/yyyy' }}</p>
+                <div class="info-pill specialty">
+                    <span class="pill-icon">🩺</span>
+                    {{ s.specialty }}
+                </div>
+                <div class="info-item">
+                    <span class="item-icon">📧</span>
+                    <span class="item-text">{{ s.email }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="item-icon">📅</span>
+                    <span class="item-text">Inscrit le {{ s.joinedAt | date:'dd/MM/yyyy' }}</span>
+                </div>
             </div>
-            <div class="card-actions" style="margin-top: 10px; display: flex; gap: 8px;" (click)="$event.stopPropagation()">
-                <!-- Voir Document -->
-                <button class="btn-icon" *ngIf="s.certificateUrl" (click)="viewDocument(s)" title="Voir Diplôme">
-                    📄
-                </button>
 
-                <!-- Pending Actions -->
-                <ng-container *ngIf="s.status === 'PENDING'">
-                    <button class="btn-action accept" (click)="validate(s)" title="Accepter">
-                        ✅
+            <div class="card-footer" (click)="$event.stopPropagation()">
+                <div class="action-group">
+                    <!-- Voir Document -->
+                    <button class="btn-circular" *ngIf="s.certificateUrl" (click)="viewDocument(s)"
+                        title="Voir Diplôme">
+                        <span class="btn-ico">📄</span>
                     </button>
-                    <button class="btn-action refuse" (click)="openRefusalPrompt(s)" title="Refuser">
-                        ❌
-                    </button>
-                </ng-container>
 
-                <div class="validated-badge" *ngIf="s.status === 'ACTIVE'">
-                    <span>✓ Actif</span>
+                    <!-- Meta info or separator -->
+                    <div class="footer-spacer"></div>
+
+                    <!-- Pending Actions -->
+                    <ng-container *ngIf="s.status === 'PENDING'">
+                        <button class="btn-action-p accept" (click)="validate(s)" title="Accepter">
+                            <span class="btn-ico">Habilitée</span>
+                        </button>
+                        <button class="btn-action-p refuse" (click)="openRefusalPrompt(s)" title="Refuser">
+                            <span class="btn-ico">Refuser</span>
+                        </button>
+                    </ng-container>
+
+                    <div class="status-badge-final active" *ngIf="s.status === 'ACTIVE'">
+                        <span class="chk">✓</span> Membre Actif
+                    </div>
                 </div>
             </div>
         </div>
@@ -122,7 +150,8 @@
                     <span>Validation</span><strong>{{ selectedSpecialist.validatedAt | date:'dd/MM/yyyy' }}</strong>
                 </div>
                 <!-- Refusal Reason -->
-                <div class="refusal-info" *ngIf="selectedSpecialist.status === 'REFUSED' && selectedSpecialist.refusalReason">
+                <div class="refusal-info"
+                    *ngIf="selectedSpecialist.status === 'REFUSED' && selectedSpecialist.refusalReason">
                     <p class="refusal-label">Motif du refus :</p>
                     <p class="refusal-text">{{ selectedSpecialist.refusalReason }}</p>
                 </div>
@@ -142,7 +171,8 @@
                 <textarea [(ngModel)]="refusalReason" placeholder="Motif du refus..." rows="4"></textarea>
                 <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
                     <button class="btn-secondary" (click)="showRefusalModal = false">Annuler</button>
-                    <button class="btn-primary refuse" [disabled]="!refusalReason.trim()" (click)="confirmRefusal()">Confirmer le refus</button>
+                    <button class="btn-primary refuse" [disabled]="!refusalReason.trim()"
+                        (click)="confirmRefusal()">Confirmer le refus</button>
                 </div>
             </div>
         </div>
@@ -155,7 +185,8 @@
                 <h2>Visualisation du Document</h2>
                 <button class="modal-close" (click)="closeDocModal()">×</button>
             </div>
-            <div class="doc-container" style="height: 70vh; background: #f5f5f5; overflow: hidden; border-radius: 0 0 20px 20px;">
+            <div class="doc-container"
+                style="height: 70vh; background: #f5f5f5; overflow: hidden; border-radius: 0 0 20px 20px;">
                 <iframe *ngIf="safeDocUrl" [src]="safeDocUrl" width="100%" height="100%" frameborder="0"></iframe>
             </div>
         </div>

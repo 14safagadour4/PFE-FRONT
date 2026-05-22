@@ -10,7 +10,7 @@
     <!-- Stats -->
     <div class="stats-row">
         <div class="stat-card purple">
-            <div class="stat-icon">🧑‍⚕️</div>
+            <div class="stat-icon">👥</div>
             <div><span class="stat-num">{{ stats.total }}</span><span class="stat-label">Total</span></div>
         </div>
         <div class="stat-card green">
@@ -52,49 +52,65 @@
         <p>Chargement...</p>
     </div>
 
-    <!-- List -->
-    <div class="therapists-list" *ngIf="!loading">
-        <div class="therapist-row" *ngFor="let t of filtered" (click)="openModal(t)">
-            <div class="row-left">
-                <div class="avatar">{{ initials(t) }}</div>
-                <div class="info">
+    <!-- Grid style Spécialistes -->
+    <div class="therapists-grid" *ngIf="!loading">
+        <div class="therapist-card" *ngFor="let t of filtered" (click)="openModal(t)"
+            [class.card-validated]="t.status === 'ACTIVE'">
+            
+            <div class="card-header">
+                <div class="avatar-wrap">
+                    <div class="avatar">{{ initials(t) }}</div>
+                    <div class="status-dot" [ngClass]="t.status.toLowerCase()"></div>
+                </div>
+                <div class="header-info">
                     <h3>{{ t.firstName }} {{ t.lastName }}</h3>
-                    <span class="specialization">{{ t.specialization }}</span>
-                    <span class="meta">{{ t.email }}</span>
+                    <div class="badge-wrap">
+                        <span class="badge" [ngClass]="t.status.toLowerCase()">{{ t.status }}</span>
+                    </div>
                 </div>
             </div>
-            <div class="row-middle">
-                <div class="meta-item">
-                    <span class="meta-label">Expérience</span>
-                    <span class="meta-val">{{ t.yearsExperience }} ans</span>
+
+            <div class="card-body">
+                <div class="info-pill specialization">
+                    <span class="pill-icon">🎨</span>
+                    {{ t.specialization }}
                 </div>
-                <div class="meta-item">
-                    <span class="meta-label">Séances</span>
-                    <span class="meta-val">{{ t.sessionsCount }}</span>
+                <div class="info-item">
+                    <span class="item-icon">📧</span>
+                    <span class="item-text">{{ t.email }}</span>
                 </div>
-                <div class="meta-item" *ngIf="t.rating">
-                    <span class="meta-label">Note</span>
-                    <span class="meta-val gold">⭐ {{ t.rating }}</span>
+                <div class="info-item">
+                    <span class="item-icon">⏳</span>
+                    <span class="item-text">{{ t.yearsExperience }} ans d'expérience</span>
+                </div>
+                <div class="info-item">
+                    <span class="item-icon">📅</span>
+                    <span class="item-text">Séances : {{ t.sessionsCount }}</span>
                 </div>
             </div>
-            <div class="row-right" (click)="$event.stopPropagation()">
-                <span class="badge" [ngClass]="t.status.toLowerCase()">{{ t.status }}</span>
-                
-                <div class="actions" style="display: flex; gap: 8px; align-items: center; margin-top: 8px;">
+
+            <div class="card-footer" (click)="$event.stopPropagation()">
+                <div class="action-group">
                     <!-- Voir Document -->
-                    <button class="btn-icon" *ngIf="t.certificateUrl" (click)="viewDocument(t)" title="Voir CV/Diplôme">
-                        📄
+                    <button class="btn-circular" *ngIf="t.certificateUrl" (click)="viewDocument(t)" title="Voir CV/Diplôme">
+                        <span class="btn-ico">📄</span>
                     </button>
+
+                    <div class="footer-spacer"></div>
 
                     <!-- Pending Actions -->
                     <ng-container *ngIf="t.status === 'PENDING'">
-                        <button class="btn-action accept" (click)="acceptTherapist(t)" title="Accepter">
-                            ✅
+                        <button class="btn-action-p accept" (click)="acceptTherapist(t)" title="Accepter">
+                            <span class="btn-ico">Habilitée</span>
                         </button>
-                        <button class="btn-action refuse" (click)="openRefusalPrompt(t)" title="Refuser">
-                            ❌
+                        <button class="btn-action-p refuse" (click)="openRefusalPrompt(t)" title="Refuser">
+                            <span class="btn-ico">Refuser</span>
                         </button>
                     </ng-container>
+
+                    <div class="status-badge-final active" *ngIf="t.status === 'ACTIVE'">
+                        <span class="chk">✓</span> Membre Actif
+                    </div>
 
                     <label class="toggle" *ngIf="t.status !== 'PENDING' && t.status !== 'REFUSED'">
                         <input type="checkbox" [checked]="t.status === 'ACTIVE'" (change)="toggleStatus(t)" />
@@ -105,39 +121,86 @@
         </div>
 
         <div class="empty-state" *ngIf="filtered.length === 0">
-            <div>🔎</div>
+            <div class="empty-icon">🔎</div>
             <p>Aucun thérapeute trouvé</p>
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal Détails -->
     <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
-        <div class="modal" (click)="$event.stopPropagation()" *ngIf="selectedTherapist">
+        <div class="modal details-modal" (click)="$event.stopPropagation()" *ngIf="selectedTherapist">
             <button class="modal-close" (click)="closeModal()">×</button>
-            <div class="modal-header">
-                <div class="modal-avatar">{{ initials(selectedTherapist) }}</div>
-                <div>
+            
+            <div class="modal-header-new">
+                <div class="modal-avatar-wrapper">
+                    <div class="modal-avatar-large">{{ initials(selectedTherapist) }}</div>
+                </div>
+                <div class="modal-title-box">
                     <h2>{{ selectedTherapist.firstName }} {{ selectedTherapist.lastName }}</h2>
-                    <p class="modal-spec">{{ selectedTherapist.specialization }}</p>
+                    <span class="modal-spec-badge">🎨 {{ selectedTherapist.specialization }}</span>
                 </div>
             </div>
-            <div class="modal-body">
-                <div class="info-row"><span>Email</span><strong>{{ selectedTherapist.email }}</strong></div>
-                <div class="info-row" *ngIf="selectedTherapist.phone"><span>Téléphone</span><strong>{{
-                        selectedTherapist.phone }}</strong></div>
-                <div class="info-row"><span>Expérience</span><strong>{{ selectedTherapist.yearsExperience }}
-                        ans</strong></div>
-                <div class="info-row"><span>Séances</span><strong>{{ selectedTherapist.sessionsCount }}</strong></div>
-                <div class="info-row" *ngIf="selectedTherapist.rating"><span>Note</span><strong>⭐ {{
-                        selectedTherapist.rating }}/5</strong></div>
-                <div class="info-row"><span>Rejoint le</span><strong>{{ selectedTherapist.joinedAt | date:'dd/MM/yyyy'
-                        }}</strong></div>
-                <div class="info-row"><span>Langues</span><strong>{{ selectedTherapist.languages?.join(', ') || 'N/A'
-                        }}</strong></div>
-                <div class="bio" *ngIf="selectedTherapist.bio">
+
+            <div class="modal-content">
+                <div class="info-grid">
+                    <div class="grid-card">
+                        <span class="grid-label">Email</span>
+                        <div class="grid-val">
+                            <span class="grid-icon">📧</span>
+                            <strong>{{ selectedTherapist.email }}</strong>
+                        </div>
+                    </div>
+                    <div class="grid-card" *ngIf="selectedTherapist.phone">
+                        <span class="grid-label">Téléphone</span>
+                        <div class="grid-val">
+                            <span class="grid-icon">📞</span>
+                            <strong>{{ selectedTherapist.phone }}</strong>
+                        </div>
+                    </div>
+                    <div class="grid-card">
+                        <span class="grid-label">Expérience</span>
+                        <div class="grid-val">
+                            <span class="grid-icon">⏳</span>
+                            <strong>{{ selectedTherapist.yearsExperience }} ans</strong>
+                        </div>
+                    </div>
+                    <div class="grid-card">
+                        <span class="grid-label">Séances</span>
+                        <div class="grid-val">
+                            <span class="grid-icon">📅</span>
+                            <strong>{{ selectedTherapist.sessionsCount }}</strong>
+                        </div>
+                    </div>
+                    <div class="grid-card" *ngIf="selectedTherapist.rating">
+                        <span class="grid-label">Note globale</span>
+                        <div class="grid-val">
+                            <span class="grid-icon">⭐</span>
+                            <strong>{{ selectedTherapist.rating }}/5</strong>
+                        </div>
+                    </div>
+                    <div class="grid-card">
+                        <span class="grid-label">Date d'inscription</span>
+                        <div class="grid-val">
+                            <span class="grid-icon">🗓️</span>
+                            <strong>{{ selectedTherapist.joinedAt | date:'dd MMM yyyy' }}</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <div class="bio-section" *ngIf="selectedTherapist.bio">
+                    <h3>À propos</h3>
                     <p>{{ selectedTherapist.bio }}</p>
                 </div>
-                <!-- Refusal Reason -->
+
+                <div class="languages-section">
+                    <h3>Langues</h3>
+                    <div class="lang-tags">
+                        <span class="lang-tag" *ngFor="let lang of (selectedTherapist.languages || ['Français', 'Arabe'])">{{ lang }}</span>
+                    </div>
+                </div>
+
                 <div class="refusal-info" *ngIf="selectedTherapist.status === 'REFUSED' && selectedTherapist.refusalReason">
                     <p class="refusal-label">Motif du refus :</p>
                     <p class="refusal-text">{{ selectedTherapist.refusalReason }}</p>

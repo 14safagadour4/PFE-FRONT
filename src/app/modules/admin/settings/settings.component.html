@@ -23,12 +23,12 @@
 
             <!-- PROFILE TAB -->
             <div *ngIf="activeTab === 'profile'">
-                <h2>Profil Super Admin</h2>
+                <h2>Profil {{ getRoleLabel(profile.role) }}</h2>
                 <div class="avatar-section">
                     <div class="big-avatar">{{ initials }}</div>
                     <div>
                         <p class="avatar-name">{{ profile.firstName }} {{ profile.lastName }}</p>
-                        <p class="avatar-role">Super Administrateur</p>
+                        <p class="avatar-role">{{ getRoleLabel(profile.role) }}</p>
                     </div>
                 </div>
 
@@ -172,20 +172,71 @@
 
             <!-- ABOUT TAB -->
             <div *ngIf="activeTab === 'about'" class="about-tab">
-                <div class="about-logo">🃏</div>
-                <h2>Cartas</h2>
-                <p class="about-version">Back-office Super Admin v1.0.0</p>
-                <div class="about-grid">
-                    <div class="about-item"><span>Framework</span><strong>Angular 17</strong></div>
-                    <div class="about-item"><span>Backend</span><strong>Spring Boot 3.2</strong></div>
-                    <div class="about-item"><span>Base de données</span><strong>MySQL 8</strong></div>
-                    <div class="about-item"><span>Authentification</span><strong>JWT Bearer</strong></div>
-                    <div class="about-item"><span>Environnement</span><strong>localhost:8080</strong></div>
-                    <div class="about-item"><span>Version Angular CLI</span><strong>17+</strong></div>
+                <div class="about-header">
+                    <div class="about-logo-wrapper">
+                        <span class="about-logo-icon">🌿</span>
+                    </div>
+                    <div class="about-info">
+                        <h2>Cartas Ecosystem</h2>
+                        <p class="about-version">Version 1.0.0 (Stable)</p>
+                    </div>
                 </div>
-                <div class="about-desc">
-                    <p>Plateforme de gestion pour Cartas — application mobile de bien-être mental.</p>
-                    <p>© 2026 Cartas PFE — Tous droits réservés.</p>
+
+                <div class="tech-stack-container">
+                    <h3>Architecture Technique</h3>
+                    <div class="tech-grid">
+                        <div class="tech-card">
+                            <span class="tech-icon">🅰️</span>
+                            <div class="tech-details">
+                                <label>Frontend</label>
+                                <strong>Angular 17+</strong>
+                            </div>
+                        </div>
+                        <div class="tech-card">
+                            <span class="tech-icon">🍃</span>
+                            <div class="tech-details">
+                                <label>Backend</label>
+                                <strong>Spring Boot 3.2</strong>
+                            </div>
+                        </div>
+                        <div class="tech-card">
+                            <span class="tech-icon">🗄️</span>
+                            <div class="tech-details">
+                                <label>Base de données</label>
+                                <strong>MySQL 8.0 (JPA/Hibernate)</strong>
+                            </div>
+                        </div>
+                        <div class="tech-card">
+                            <span class="tech-icon">🛡️</span>
+                            <div class="tech-details">
+                                <label>Sécurité</label>
+                                <strong>JWT Bearer Token</strong>
+                            </div>
+                        </div>
+                        <div class="tech-card">
+                            <span class="tech-icon">🎨</span>
+                            <div class="tech-details">
+                                <label>Design System</label>
+                                <strong>Custom CSS (Dark Mode)</strong>
+                            </div>
+                        </div>
+                        <div class="tech-card">
+                            <span class="tech-icon">🚀</span>
+                            <div class="tech-details">
+                                <label>Serveur API</label>
+                                <strong>localhost:8080</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-footer">
+                    <p class="about-desc">Plateforme de gestion centralisée pour l'écosystème Cartas — Solution innovante pour le bien-être mental et le suivi thérapeutique.</p>
+                    <div class="copyright-bar">
+                        <span>© 2026 Cartas PFE</span>
+                        <span class="separator">•</span>
+                        <span>Développé avec passion</span>
+                    </div>
                 </div>
             </div>
 

@@ -20,9 +20,16 @@ export class AuthService {
   theme = signal<'dark' | 'light'>(this.currentUser()?.preferredTheme ?? 'dark');
 
   constructor(private http: HttpClient, private router: Router) {
-    // Applique le thème sur <html>
+    // Applique le thème sur <html> et <body>
     effect(() => {
-      document.documentElement.setAttribute('data-theme', this.theme());
+      const currentTheme = this.theme();
+      document.documentElement.setAttribute('data-theme', currentTheme);
+      
+      if (currentTheme === 'light') {
+        document.body.classList.add('light-theme');
+      } else {
+        document.body.classList.remove('light-theme');
+      }
     });
   }
 
@@ -38,6 +45,11 @@ export class AuthService {
 
   login(req: LoginRequest): Observable<ApiResponse<AuthResponse>> {
     return this.http.post<ApiResponse<AuthResponse>>(`${this.api}/login`, req)
+      .pipe(tap(r => { if (r.success) this.persist(r.data); }));
+  }
+
+  magicLogin(token: string): Observable<ApiResponse<AuthResponse>> {
+    return this.http.get<ApiResponse<AuthResponse>>(`${this.api}/magic-login?token=${token}`)
       .pipe(tap(r => { if (r.success) this.persist(r.data); }));
   }
 

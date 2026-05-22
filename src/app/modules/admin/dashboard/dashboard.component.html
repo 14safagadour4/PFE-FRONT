@@ -61,7 +61,7 @@
 
     <!-- Deux colonnes principales -->
     <div class="dashboard-row">
-        <!-- Activités récentes (style image) -->
+        <!-- Activités récentes -->
         <div class="dashboard-card activities-card">
             <div class="card-header">
                 <h3>Activité récente</h3>
@@ -81,110 +81,151 @@
                 <div class="empty-state">Aucune activité récente</div>
                 }
             </div>
-
-            <!-- Timeline des activités (comme dans l'image) -->
-            <div class="activity-timeline">
-                <span class="timeline-dot active"></span>
-                <span class="timeline-dot"></span>
-                <span class="timeline-dot"></span>
-                <span class="timeline-dot"></span>
-                <span class="timeline-dot"></span>
-                <span class="timeline-label">2m 15m 1h 3h 5h</span>
-            </div>
         </div>
 
-        <!-- Graphique inscriptions -->
+        <!-- Inscriptions Graphique -->
         <div class="dashboard-card chart-card">
             <div class="card-header">
                 <h3>Inscriptions / 7 jours</h3>
             </div>
-
-            <!-- Barres du graphique -->
             <div class="chart-bars">
-                <div class="chart-bar-group">
-                    <div class="bar" style="height: 45px"></div>
-                    <span class="bar-label">Lun</span>
-                </div>
-                <div class="chart-bar-group">
-                    <div class="bar" style="height: 70px"></div>
-                    <span class="bar-label">Mar</span>
-                </div>
-                <div class="chart-bar-group">
-                    <div class="bar" style="height: 55px"></div>
-                    <span class="bar-label">Mer</span>
-                </div>
-                <div class="chart-bar-group">
-                    <div class="bar" style="height: 80px"></div>
-                    <span class="bar-label">Jeu</span>
-                </div>
-                <div class="chart-bar-group">
-                    <div class="bar" style="height: 65px"></div>
-                    <span class="bar-label">Ven</span>
-                </div>
-                <div class="chart-bar-group">
-                    <div class="bar" style="height: 40px"></div>
-                    <span class="bar-label">Sam</span>
-                </div>
-                <div class="chart-bar-group">
-                    <div class="bar" style="height: 50px"></div>
-                    <span class="bar-label">Dim</span>
-                </div>
-            </div>
-
-            <!-- Statistiques -->
-            <div class="chart-stats">
-                <div class="stat-item">
-                    <span class="stat-big">284</span>
-                    <span class="stat-label">Cette semaine</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-change positive">+12%</span>
-                    <span class="stat-label">vs précédente</span>
+                <div class="chart-bar-group" *ngFor="let day of ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim']">
+                    <div class="bar" [style.height.px]="40 + (day.length * 5)"></div>
+                    <span class="bar-label">{{ day }}</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Deuxième ligne : Actions rapides -->
+    <!-- 🧠 ML Intelligence Monitoring (Always Visible) -->
     <div class="dashboard-row">
-        <!-- Actions rapides -->
-        <div class="dashboard-card">
-            <h3>Actions rapides</h3>
-            <div class="quick-actions">
-                <button class="quick-action-btn">
-                    <span>👤</span>
-                    <span>Nouvel utilisateur</span>
+        <div class="dashboard-card ml-card full-width">
+            <div class="card-header">
+                <h3>🧠 ML Intelligence Monitoring (Human-in-the-loop)</h3>
+                <span class="badge">Live Learning Mode</span>
+            </div>
+            
+            <div class="ml-dashboard-content">
+                @if (aiStats()) {
+                    <div class="ml-stats-summary">
+                        <div class="ml-main-stat">
+                            <div class="circular-progress-box">
+                                <span class="progress-value">{{ aiStats().accuracy | number:'1.1-1' }}%</span>
+                                <span class="progress-label">Précision</span>
+                            </div>
+                        </div>
+                        <div class="ml-detail-stats">
+                            <div class="ml-stat-box">
+                                <span class="stat-label">Feedback Expert</span>
+                                <span class="stat-number">{{ aiStats().totalValidated }}</span>
+                            </div>
+                            <div class="ml-stat-box">
+                                <span class="stat-label">Erreur Moyenne</span>
+                                <span class="stat-number">{{ aiStats().averageError | number:'1.1-1' }}%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ml-history-timeline">
+                        <h4>Courbe d'apprentissage</h4>
+                        <div class="timeline-points">
+                            @for (point of aiStats().history; track point.date) {
+                                <div class="timeline-point">
+                                    <div class="point-marker"></div>
+                                    <div class="point-info">
+                                        <span class="point-date">{{ point.date }}</span>
+                                        <span class="point-value">{{ point.accuracy | number:'1.1-1' }}%</span>
+                                    </div>
+                                </div>
+                            } @empty {
+                                <div class="empty-state">En attente de validations pour générer la courbe...</div>
+                            }
+                        </div>
+                    </div>
+                } @else {
+                    <div class="empty-state">Chargement des données ML...</div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions rapides & Système -->
+    <div class="dashboard-row">
+        <!-- Actions Rapides -->
+        <div class="dashboard-card actions-widget">
+            <div class="card-header">
+                <h3><span class="icon-title">⚡</span> Actions rapides</h3>
+            </div>
+            <div class="quick-actions-grid">
+                <button class="action-tile purple" routerLink="/admin/users">
+                    <span class="tile-icon">👤</span>
+                    <div class="tile-text">
+                        <strong>Utilisateur</strong>
+                        <span>Ajouter nouveau</span>
+                    </div>
                 </button>
-                <button class="quick-action-btn">
-                    <span>🩺</span>
-                    <span>Nouveau spécialiste</span>
+                <button class="action-tile blue" routerLink="/admin/specialists">
+                    <span class="tile-icon">🩺</span>
+                    <div class="tile-text">
+                        <strong>Spécialiste</strong>
+                        <span>Nouvelle fiche</span>
+                    </div>
                 </button>
-                <button class="quick-action-btn">
-                    <span>📝</span>
-                    <span>Nouveau contenu</span>
+                <button class="action-tile gold" routerLink="/admin/content">
+                    <span class="tile-icon">📝</span>
+                    <div class="tile-text">
+                        <strong>Contenu</strong>
+                        <span>Publier article</span>
+                    </div>
                 </button>
-                <button class="quick-action-btn">
-                    <span>🤝</span>
-                    <span>Inviter partenaire</span>
+                <button class="action-tile rose" routerLink="/admin/partners">
+                    <span class="tile-icon">🤝</span>
+                    <div class="tile-text">
+                        <strong>Partenaire</strong>
+                        <span>Inviter tiers</span>
+                    </div>
                 </button>
             </div>
         </div>
 
-        <!-- Activités système (complément) -->
-        <div class="dashboard-card">
-            <h3>Système</h3>
-            <div class="system-stats">
-                <div class="system-item">
-                    <span>🖥️ Sessions actives</span>
-                    <span class="system-value">1,284</span>
+        <!-- État Système -->
+        <div class="dashboard-card system-widget">
+            <div class="card-header">
+                <h3><span class="icon-title">⚙️</span> État du Système</h3>
+            </div>
+            <div class="system-monitor">
+                <div class="system-status-pill">
+                    <div class="pill-info">
+                        <span class="pill-icon">🖥️</span>
+                        <span class="pill-label">Sessions actives</span>
+                    </div>
+                    <span class="pill-value highlight">1,284</span>
                 </div>
-                <div class="system-item">
-                    <span>⚠️ Alertes</span>
-                    <span class="system-value">3</span>
+                
+                <div class="system-status-pill warning">
+                    <div class="pill-info">
+                        <span class="pill-icon">⚠️</span>
+                        <span class="pill-label">Alertes critiques</span>
+                    </div>
+                    <div class="pill-meta">
+                        <span class="status-dot"></span>
+                        <span class="pill-value">3</span>
+                    </div>
                 </div>
-                <div class="system-item">
-                    <span>💾 Base de données</span>
-                    <span class="system-value">Ok</span>
+
+                <div class="system-status-pill success">
+                    <div class="pill-info">
+                        <span class="pill-icon">💾</span>
+                        <span class="pill-label">Base de données</span>
+                    </div>
+                    <div class="pill-meta">
+                        <span class="status-dot"></span>
+                        <span class="pill-value">Opérationnel</span>
+                    </div>
+                </div>
+
+                <div class="system-footer">
+                    <span class="last-sync">Dernière vérification : il y a 2 min</span>
                 </div>
             </div>
         </div>
