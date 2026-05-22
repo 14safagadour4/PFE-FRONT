@@ -1,9 +1,15 @@
 /* intro.component.css - Style harmonisé avec les modules */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 
-:root {
+.intro-section {
+  position: relative;
+  padding: 100px 40px;
+  background: #fcf8f2;
+  overflow: hidden;
+  border-bottom: 1px solid var(--gold-light);
+
   /* Palette cohérente */
-  --color-bg: #fdfaf5;
+  --color-bg: #fcf8f2;
   --color-bg-card: #ffffff;
   --color-bg-stats: #ffffff;
   --gold-light: #f5e8d3;
@@ -11,8 +17,8 @@
   --gold-dark: #c9a961;
   --nature-green: #7d9d7a;
   --nature-green-light: #e2ece0;
-  --text-primary: #341742;
-  --text-secondary: #6b6b6b;
+  --text-primary: #2a1236;
+  --text-secondary: #555555;
   --text-light: #9b9b9b;
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
   --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.06);
@@ -33,15 +39,6 @@
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(25px); }
   to { opacity: 1; transform: translateY(0); }
-}
-
-/* Section principale */
-.intro-section {
-  position: relative;
-  padding: 100px 40px;
-  background: var(--color-bg);
-  overflow: hidden;
-  border-bottom: 1px solid var(--gold-light);
 }
 
 .intro-container {

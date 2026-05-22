@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ContentService, LearningModule } from './content.service';
 
 export interface ContentItem {
   id: number;
@@ -31,24 +32,92 @@ export class ContentComponent implements OnInit {
   typeFilter = 'ALL';
   statusFilter = 'ALL';
   selectedItem: ContentItem | null = null;
-  showModal = false;
 
   stats = { total: 0, published: 0, draft: 0, totalViews: 0 };
+  categories: any[] = [];
+  
+  showModal = false;
+  isCreateMode = false;
+  isEditMode = false;
+  editingModuleId: number | null = null;
+  
+  newModule: any = {
+    title: '',
+    description: '',
+    authorName: '',
+    duration: '',
+    totalLessons: 0,
+    imageUrl: 'assets/images/nutri.jpg',
+    categoryId: null,
+    contentType: 'ARTICLE',
+    lessons: []
+  };
 
   typeIcons: Record<string, string> = {
     ARTICLE: '📄', VIDEO: '🎬', PODCAST: '🎙️', EXERCISE: '🧘'
   };
 
-  ngOnInit() { this.load(); }
+  constructor(private contentService: ContentService) {}
+
+  ngOnInit() { 
+    this.load(); 
+    this.loadCategories();
+  }
+
+  addLesson() {
+    this.newModule.lessons.push({
+      title: '',
+      duration: '',
+      contentText: '',
+      blocksJson: '[]',
+      expanded: true // La nouvelle leçon est ouverte par défaut
+    });
+    this.newModule.totalLessons = this.newModule.lessons.length;
+  }
+
+  toggleLesson(lesson: any) {
+    lesson.expanded = !lesson.expanded;
+  }
+
+  removeLesson(index: number) {
+    this.newModule.lessons.splice(index, 1);
+    this.newModule.totalLessons = this.newModule.lessons.length;
+  }
 
   load() {
     this.loading = true;
-    setTimeout(() => {
-      this.items = this.mockData();
-      this.applyFilters();
-      this.computeStats();
-      this.loading = false;
-    }, 600);
+    this.contentService.getModules().subscribe({
+      next: (modules) => {
+        this.items = modules.map(m => this.mapModuleToItem(m));
+        this.applyFilters();
+        this.computeStats();
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Erreur chargement modules:', err);
+        this.loading = false;
+      }
+    });
+  }
+
+  loadCategories() {
+    this.contentService.getCategories().subscribe(cats => this.categories = cats);
+  }
+
+  private mapModuleToItem(m: LearningModule): ContentItem {
+    return {
+      id: m.id,
+      title: m.title,
+      type: (m.contentType as any) || 'EXERCISE',
+      category: m.category?.name || 'Général',
+      author: m.authorName || 'Partenaire',
+      status: m.isPublished ? 'PUBLISHED' : 'DRAFT',
+      views: 0,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      thumbnail: m.imageUrl,
+      description: m.description
+    };
   }
 
   computeStats() {
@@ -68,12 +137,123 @@ export class ContentComponent implements OnInit {
     });
   }
 
-  openModal(item: ContentItem) { this.selectedItem = item; this.showModal = true; }
+  openModal(item: ContentItem) { 
+    this.selectedItem = item; 
+    this.isCreateMode = false;
+    this.showModal = true; 
+  }
+
+  openCreateModal() {
+    this.isCreateMode = true;
+    this.isEditMode = false;
+    this.selectedItem = null;
+    this.showModal = true;
+    this.resetForm();
+  }
+
+  openEditModal(item: ContentItem) {
+    this.isCreateMode = false;
+    this.isEditMode = true;
+    this.editingModuleId = item.id;
+    this.selectedItem = item;
+    
+    // Charger les détails du module depuis le service pour avoir les leçons
+    this.contentService.getModules().subscribe(modules => {
+      const module = modules.find(m => m.id === item.id);
+      if (module) {
+        this.newModule = {
+          id: module.id,
+          title: module.title,
+          description: module.description,
+          authorName: module.authorName,
+          duration: module.duration,
+          totalLessons: module.totalLessons,
+          imageUrl: module.imageUrl,
+          categoryId: module.category?.id,
+          contentType: module.contentType,
+          lessons: module.lessons ? module.lessons.map(l => ({
+            ...l,
+            contentText: this.extractTextFromBlocks(l.blocksJson),
+            expanded: false
+          })) : []
+        };
+        this.showModal = true;
+      }
+    });
+  }
+
+  private extractTextFromBlocks(blocksJson: string): string {
+    try {
+      const blocks = JSON.parse(blocksJson);
+      return blocks.filter((b: any) => b.type === 'text').map((b: any) => b.content).join('\n');
+    } catch (e) {
+      return '';
+    }
+  }
+
   closeModal() { this.showModal = false; this.selectedItem = null; }
 
+  saveModule() {
+    // Transformer le texte en JSON pour chaque leçon
+    const processedLessons = this.newModule.lessons.map((l: any) => ({
+      id: l.id,
+      title: l.title,
+      duration: l.duration,
+      blocksJson: JSON.stringify([{ type: 'text', content: l.contentText || '' }])
+    }));
+
+    const payload = {
+      ...this.newModule,
+      lessons: processedLessons,
+      category: { id: this.newModule.categoryId }
+    };
+    
+    if (this.isEditMode && this.editingModuleId) {
+      payload.id = this.editingModuleId;
+    }
+
+    this.contentService.createModule(payload).subscribe({
+      next: (m) => {
+        if (this.isEditMode) {
+          const index = this.items.findIndex(i => i.id === m.id);
+          if (index !== -1) {
+            this.items[index] = this.mapModuleToItem(m);
+          }
+        } else {
+          this.items.unshift(this.mapModuleToItem(m));
+        }
+        this.applyFilters();
+        this.computeStats();
+        this.closeModal();
+        this.resetForm();
+      },
+      error: (err) => console.error('Erreur sauvegarde:', err)
+    });
+  }
+
+  resetForm() {
+    this.newModule = { 
+      title: '', 
+      description: '', 
+      authorName: '', 
+      duration: '', 
+      totalLessons: 0, 
+      imageUrl: 'assets/images/nutri.jpg', 
+      categoryId: null, 
+      contentType: 'ARTICLE',
+      lessons: [] 
+    };
+  }
+
   toggleStatus(item: ContentItem) {
-    item.status = item.status === 'PUBLISHED' ? 'DRAFT' : 'PUBLISHED';
-    this.computeStats();
+    const newStatus = item.status === 'PUBLISHED' ? false : true;
+    this.contentService.togglePublish(item.id, newStatus).subscribe({
+      next: () => {
+        item.status = newStatus ? 'PUBLISHED' : 'DRAFT';
+        this.computeStats();
+      },
+      error: (err) => console.error('Erreur toggle status:', err)
+    });
   }
 
   archive(item: ContentItem) { item.status = 'ARCHIVED'; this.applyFilters(); this.computeStats(); }

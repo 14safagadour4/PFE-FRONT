@@ -19,7 +19,8 @@ export class SettingsComponent implements OnInit {
     lastName: '',
     email: '',
     phone: '+216 20 000 000',
-    preferredTheme: 'dark'
+    preferredTheme: 'dark',
+    role: 'SUPER_ADMIN'
   };
   profileSaved = false;
 
@@ -63,6 +64,7 @@ export class SettingsComponent implements OnInit {
       this.profile.lastName = userFromToken.lastName || '';
       this.profile.email = userFromToken.email || '';
       this.profile.preferredTheme = userFromToken.preferredTheme || 'dark';
+      this.profile.role = userFromToken.role || 'SUPER_ADMIN';
       return;
     }
 
@@ -74,6 +76,7 @@ export class SettingsComponent implements OnInit {
       this.profile.lastName = userFromStorage.lastName || '';
       this.profile.email = userFromStorage.email || '';
       this.profile.preferredTheme = userFromStorage.preferredTheme || 'dark';
+      this.profile.role = userFromStorage.role || 'SUPER_ADMIN';
       return;
     }
 
@@ -111,5 +114,17 @@ export class SettingsComponent implements OnInit {
   get initials() {
     return (this.profile.firstName?.charAt(0) || 'S') +
       (this.profile.lastName?.charAt(0) || 'A');
+  }
+
+  getRoleLabel(role: string): string {
+    switch (role) {
+      case 'SUPER_ADMIN': return 'Super Administrateur';
+      case 'ADMIN_CONTENU': return 'Gestionnaire de Contenu';
+      case 'ADMIN_UTILISATEURS': return 'Gestionnaire Utilisateurs';
+      case 'ADMIN_LECTURE': return 'Administrateur (Lecture seule)';
+      case 'ART_THERAPIST': return 'Art-Thérapeute';
+      case 'SPECIALIST': return 'Spécialiste';
+      default: return role || 'Utilisateur';
+    }
   }
 }

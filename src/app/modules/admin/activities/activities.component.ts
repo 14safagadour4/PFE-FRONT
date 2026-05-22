@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivityLogService } from '../../../core/services/activity-log.service';
 
-export interface ActivityLog {
+export interface UIActivityLog {
   id: number;
   action: string;
   description: string;
@@ -23,8 +24,10 @@ export interface ActivityLog {
   styleUrls: ['./activities.component.css']
 })
 export class ActivitiesComponent implements OnInit {
-  logs: ActivityLog[] = [];
-  filtered: ActivityLog[] = [];
+  private activityLogService = inject(ActivityLogService);
+
+  logs: UIActivityLog[] = [];
+  filtered: UIActivityLog[] = [];
   loading = true;
   searchTerm = '';
   severityFilter = 'ALL';
@@ -32,59 +35,115 @@ export class ActivitiesComponent implements OnInit {
   pageSize = 15;
   totalPages = 1;
 
-  ngOnInit() { this.load(); }
+  ngOnInit() {
+    this.load();
+  }
 
   load() {
     this.loading = true;
-    setTimeout(() => {
-      this.logs = this.mockData();
-      this.applyFilters();
-      this.loading = false;
-    }, 500);
+    this.activityLogService.getAll(this.page, this.pageSize, this.searchTerm).subscribe({
+      next: (res) => {
+        if (res.success && res.data) {
+          const rawLogs = res.data.content || [];
+          this.logs = rawLogs.map(l => ({
+            id: l.id,
+            action: l.action,
+            description: this.getActionDescription(l),
+            performedBy: l.actorName || 'Super Admin',
+            role: l.actorType || 'SUPER_ADMIN',
+            targetType: l.targetType,
+            targetId: l.targetId,
+            ip: l.ipAddress || '',
+            timestamp: l.createdAt,
+            severity: this.determineSeverity(l.action)
+          }));
+          this.totalPages = res.data.totalPages || 1;
+          this.applyFilters();
+        } else {
+          this.logs = [];
+          this.filtered = [];
+          this.totalPages = 1;
+        }
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des activités :', err);
+        this.logs = [];
+        this.filtered = [];
+        this.totalPages = 1;
+        this.loading = false;
+      }
+    });
   }
 
   applyFilters() {
-    let list = this.logs.filter(l => {
-      const matchSearch = !this.searchTerm ||
-        `${l.action} ${l.description} ${l.performedBy}`
-          .toLowerCase().includes(this.searchTerm.toLowerCase());
-      const matchSeverity = this.severityFilter === 'ALL' || l.severity === this.severityFilter;
-      return matchSearch && matchSeverity;
-    });
-    this.totalPages = Math.ceil(list.length / this.pageSize);
-    this.filtered = list.slice(this.page * this.pageSize, (this.page + 1) * this.pageSize);
+    if (this.severityFilter === 'ALL') {
+      this.filtered = this.logs;
+    } else {
+      this.filtered = this.logs.filter(l => l.severity === this.severityFilter);
+    }
   }
 
-  prevPage() { if (this.page > 0) { this.page--; this.applyFilters(); } }
-  nextPage() { if (this.page < this.totalPages - 1) { this.page++; this.applyFilters(); } }
+  onSearchChange() {
+    this.page = 0;
+    this.load();
+  }
+
+  onSeverityChange(filter: string) {
+    this.severityFilter = filter;
+    this.applyFilters();
+  }
+
+  prevPage() {
+    if (this.page > 0) {
+      this.page--;
+      this.load();
+    }
+  }
+
+  nextPage() {
+    if (this.page < this.totalPages - 1) {
+      this.page++;
+      this.load();
+    }
+  }
 
   severityIcon(s: string) {
     return { INFO: 'ℹ️', WARNING: '⚠️', ERROR: '🔴', SUCCESS: '✅' }[s] || 'ℹ️';
   }
 
-  mockData(): ActivityLog[] {
-    const actions = [
-      { action: 'LOGIN', desc: 'Connexion réussie', sev: 'SUCCESS' as const },
-      { action: 'REGISTER', desc: 'Inscription Super Admin', sev: 'SUCCESS' as const },
-      { action: 'VALIDATE_SPECIALIST', desc: 'Spécialiste validé', sev: 'SUCCESS' as const },
-      { action: 'BLOCK_USER', desc: 'Utilisateur bloqué', sev: 'WARNING' as const },
-      { action: 'CREATE_PARTNER', desc: 'Partenaire créé', sev: 'INFO' as const },
-      { action: 'DELETE_PARTNER', desc: 'Partenaire supprimé', sev: 'WARNING' as const },
-      { action: 'FAILED_LOGIN', desc: 'Tentative de connexion échouée', sev: 'ERROR' as const },
-      { action: 'UPDATE_ROLE', desc: 'Rôle mis à jour', sev: 'INFO' as const },
-    ];
-    return Array.from({ length: 40 }, (_, i) => {
-      const a = actions[i % actions.length];
-      return {
-        id: i + 1,
-        action: a.action,
-        description: a.desc,
-        performedBy: i % 3 === 0 ? 'Super Admin' : `Partner ${(i % 4) + 1}`,
-        role: i % 3 === 0 ? 'SUPER_ADMIN' : 'PARTNER',
-        ip: `192.168.1.${(i % 50) + 10}`,
-        timestamp: new Date(Date.now() - i * 3600000 * 2).toISOString(),
-        severity: a.sev,
-      };
-    });
+  determineSeverity(action: string): 'INFO' | 'WARNING' | 'ERROR' | 'SUCCESS' {
+    const act = (action || '').toUpperCase();
+    if (act.includes('VALIDATED') || act.includes('UNBLOCKED') || act.includes('SUCCESS') || act.includes('ACTIVATED') || act.includes('LOGIN')) {
+      return 'SUCCESS';
+    }
+    if (act.includes('FAILED')) {
+      return 'ERROR';
+    }
+    if (act.includes('BLOCKED') || act.includes('REFUSED') || act.includes('DELETED') || act.includes('DEACTIVATED')) {
+      return 'WARNING';
+    }
+    return 'INFO';
+  }
+
+  getActionDescription(log: any): string {
+    if (log.details && log.details.trim()) {
+      return log.details;
+    }
+    const mapping: Record<string, string> = {
+      USER_VALIDATED: 'Utilisateur validé',
+      USER_BLOCKED: 'Utilisateur bloqué',
+      USER_UNBLOCKED: 'Utilisateur réactivé',
+      PARTNER_CREATED: 'Partenaire créé',
+      PARTNER_ACTIVATED: 'Partenaire activé',
+      PARTNER_DEACTIVATED: 'Partenaire désactivé',
+      PARTNER_DELETED: 'Partenaire supprimé',
+      PARTNER_ROLE_CHANGED: 'Rôle du partenaire mis à jour',
+      SPECIALIST_VALIDATED: 'Spécialiste validé',
+      SPECIALIST_REFUSED: 'Spécialiste refusé',
+      ART_THERAPIST_VALIDATED: 'Art-Thérapeute validé',
+      ART_THERAPIST_REFUSED: 'Art-Thérapeute refusé',
+    };
+    return mapping[log.action] || log.action || 'Action effectuée';
   }
 }

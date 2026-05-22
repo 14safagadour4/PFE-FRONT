@@ -5,16 +5,59 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Josefin+Sans:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
 
 :root {
+  /* ── SHARED COLORS ── */
   --rose:       #7D3050;
   --rose-light: #A8547A;
   --rose-pale:  #F5E8EE;
   --rose-deep:  #5C1F3A;
   --gold:       #C9A96E;
-  --gold-light: #E8D5A3;
+  --gold-hi:    #E8D5A3;
   --cream:      #FAF6F0;
-  --dark:       #1A0A12;
-  --dark-mid:   #2D1520;
   --sage:       #6B9E6F;
+
+  /* ── THEME COLORS (DARK DEFAULT) ── */
+  --bg:         #0b0918;
+  --bg2:        #08060e;
+  --surface:    #18142b;
+  --surface2:   #1f1a35;
+  --surface3:   #261f40;
+  --violet:     #7b5ea7;
+  --violet-hi:  #9b7fcb;
+  --violet-lo:  #4a3870;
+  --text:       #ede8f8;
+  --text-soft:  #bab0d5;
+  --text-muted: #7a6f96;
+  --text-dim:   #4a4268;
+  --border:     rgba(123, 94, 167, 0.16);
+  --success:    #4ecca3;
+  --warn:       #e8a45a;
+  --danger:     #e05c7a;
+  --nav-bg:     #0b0918;
+  --topbar-bg:  #0e0b1a;
+  --topbar-border: rgba(123, 94, 167, 0.14);
+}
+
+body.light-theme {
+  --bg:         #f5f3fc;
+  --bg2:        #ede9f8;
+  --surface:    #ffffff;
+  --surface2:   #f0ecfa;
+  --surface3:   #e5dff5;
+  --violet:     #7b5ea7;
+  --violet-hi:  #6547a0;
+  --violet-lo:  #9b7fcb;
+  --text:       #1c1535;
+  --text-soft:  #3c3065;
+  --text-muted: #6a5e90;
+  --text-dim:   #9e94be;
+  --border:     rgba(123, 94, 167, 0.12);
+  --success:    #0d9e7b;
+  --warn:       #b06820;
+  --danger:     #b02858;
+  --topbar-bg:  #ffffff;
+  --topbar-border: rgba(123, 94, 167, 0.10);
+  /* Sidenav remains dark for better contrast */
+  --nav-bg:     #130f22; 
 }
 
 *, *::before, *::after {
