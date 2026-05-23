@@ -1,0 +1,17 @@
+[33mf6ff6d9[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{0}: checkout: moving from safa to main
+[33mb3e2c3a[m[33m ([m[1;31morigin/safa[m[33m, [m[1;32msafa[m[33m)[m HEAD@{1}: commit: feat:web vitrine updated
+[33m799d8ad[m HEAD@{2}: checkout: moving from safa to safa
+[33m799d8ad[m HEAD@{3}: commit: feat:landing page module loading
+[33m5138471[m HEAD@{4}: checkout: moving from safa to safa
+[33m5138471[m HEAD@{5}: checkout: moving from safa to safa
+[33m5138471[m HEAD@{6}: checkout: moving from main to safa
+[33mf6ff6d9[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{7}: checkout: moving from safa to main
+[33m5138471[m HEAD@{8}: commit: refactor: migration complète vers architecture modulaire: Suppression de l'ancien dossier features + Création des modules admin (activities, authSuper , dashboard , users.....)
+[33mad6f5d2[m HEAD@{9}: checkout: moving from main to safa
+[33mf6ff6d9[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{10}: pull origin main: Fast-forward
+[33m50ab6f4[m[33m ([m[1;31morigin/isra[m[33m)[m HEAD@{11}: checkout: moving from safa to main
+[33mad6f5d2[m HEAD@{12}: commit: feat(frontend): implémentation complète super admin et gestion des rôles
+[33m3e9c4dc[m HEAD@{13}: checkout: moving from safa to safa
+[33m3e9c4dc[m HEAD@{14}: pull origin main: Fast-forward
+[33m50ab6f4[m[33m ([m[1;31morigin/isra[m[33m)[m HEAD@{15}: checkout: moving from main to safa
+[33m50ab6f4[m[33m ([m[1;31morigin/isra[m[33m)[m HEAD@{16}: commit (initial): v2
