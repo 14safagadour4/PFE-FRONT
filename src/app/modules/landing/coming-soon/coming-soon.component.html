@@ -1,0 +1,20 @@
+<section id="coming-soon" class="coming-section">
+
+  <div class="coming-header">
+    <span class="sec-tag">Prochainement</span>
+    <h2 class="sec-title">L'expérience <em>complète</em> arrive</h2>
+    <p class="sec-desc">Ces modules enrichissants seront disponibles dans la prochaine mise à jour majeure de CARTAS.</p>
+  </div>
+
+  <div class="coming-grid">
+    @for (mod of modules; track mod.name) {
+      <div class="coming-card">
+        <span class="coming-ribbon">BIENTÔT</span>
+        <span class="coming-icon">{{ mod.icon }}</span>
+        <div class="coming-name">{{ mod.name }}</div>
+        <p class="coming-desc">{{ mod.desc }}</p>
+      </div>
+    }
+  </div>
+
+</section>

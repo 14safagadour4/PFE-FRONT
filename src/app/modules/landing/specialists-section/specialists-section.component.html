@@ -1,0 +1,33 @@
+<section id="specialists" class="specialists-section">
+
+  <div class="spec-header">
+    <span class="sec-tag">Notre Réseau</span>
+    <h2 class="sec-title">Spécialistes <em>certifiés</em></h2>
+    <p class="sec-desc">Des professionnels rigoureusement sélectionnés et validés par notre équipe avant toute publication.</p>
+  </div>
+
+  <div class="spec-grid">
+    @for (s of specialists; track s.name) {
+      <div class="spec-card">
+        <div class="spec-avatar">
+          {{ s.initial }}
+          <span class="spec-badge">✓</span>
+        </div>
+        <div class="spec-name">{{ s.name }}</div>
+        <span class="spec-role">{{ s.role }}</span>
+        <p class="spec-bio">{{ s.bio }}</p>
+        <div class="spec-stats">
+          <div>
+            <span class="spec-val">{{ s.note }}</span>
+            <span class="spec-lbl">Note</span>
+          </div>
+          <div>
+            <span class="spec-val">{{ s.patients }}</span>
+            <span class="spec-lbl">Patients</span>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+</section>

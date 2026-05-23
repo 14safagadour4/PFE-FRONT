@@ -1,0 +1,21 @@
+<section id="modules" class="modules-section">
+
+  <div class="sec-header">
+    <span class="sec-tag">Modules Principaux</span>
+    <h2 class="sec-title">Tout ce dont vous <em>avez besoin</em></h2>
+    <p class="sec-desc">Six modules pour prendre soin de votre bien-être naturellement — disponibles dès le lancement.</p>
+  </div>
+
+  <div class="modules-grid">
+    @for (mod of modules; track mod.name) {
+      <div class="module-card">
+        <span class="mod-icon">{{ mod.icon }}</span>
+        <span class="mod-tag">{{ mod.tag }}</span>
+        <div class="mod-name">{{ mod.name }}</div>
+        <p class="mod-desc">{{ mod.desc }}</p>
+        <span class="mod-badge">{{ mod.badge }}</span>
+      </div>
+    }
+  </div>
+
+</section>

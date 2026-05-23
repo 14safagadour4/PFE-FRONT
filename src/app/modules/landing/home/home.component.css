@@ -1,0 +1,829 @@
+/* ══════════════════════════════════════════════════════
+   HOME — Landing Page Cartas (Version Améliorée)
+   ══════════════════════════════════════════════════════ */
+
+:host {
+  display: block;
+  width: 100%;
+  background: #FAF6F0;
+  font-family: 'Josefin Sans', sans-serif;
+
+  /* ── Palette enrichie avec tons girly/royaux ── */
+  --rose:          #7D3050;        /* Rose royal profond */
+  --rose-light:    #A8547A;        /* Rose plus doux */
+  --rose-pale:     #F5E8EE;        /* Rose poudré très doux */
+  --rose-deep:     #5C1F3A;        /* Violet foncé/aubergine */
+  --violet-soft:   #9B7FCB;        /* Violet lavande girly */
+  --violet-pale:   #E8DDFF;        /* Violet très pâle */
+  --gold:          #C9A96E;        /* Doré élégant */
+  --gold-light:    #E8D5A3;        /* Doré clair */
+  --gold-deep:     #A07840;        /* Doré profond */
+  --cream:         #FAF6F0;        /* Crème doux */
+  --dark:          #1A0A12;        /* Noir profond */
+  --dark-mid:      #2D1520;        /* Violet très foncé */
+  --text:          #3D2030;        /* Texte principal */
+  --text-muted:    #8B6070;        /* Texte adouci */
+  --sage:          #6B9E6F;        /* Vert sauge */
+  --sage-light:    #A8CBAC;        /* Vert sauge clair */
+}
+
+/* ===== BANDE DÉFILANTE DES MODULES - COLLÉE À LA SECTION HERO ===== */
+.modules-marquee {
+  background: linear-gradient(90deg, #7D3050, #9B7FCB, #5C1F3A);
+  background-size: 200% auto;
+  animation: gradientShift 8s ease infinite;
+  padding: 28px 0;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  box-shadow:
+    0 8px 20px rgba(123, 94, 167, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border-top: 2px solid rgba(232, 213, 163, 0.5);
+  border-bottom: 2px solid rgba(232, 213, 163, 0.5);
+  margin: 0; /* SUPPRIME LES MARGES HAUT ET BAS */
+  z-index: 5;
+}
+
+/* Effet de brillance sur les bords */
+.modules-marquee::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #E8D5A3, #FFD966, #E8D5A3, transparent);
+  animation: shimmerTop 3s ease-in-out infinite;
+  z-index: 1;
+}
+
+.modules-marquee::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #E8D5A3, #FFD966, #E8D5A3, transparent);
+  animation: shimmerBottom 3s ease-in-out infinite;
+  z-index: 1;
+}
+
+.modules-marquee .marquee-track {
+  display: flex;
+  animation: marqueeScroll 35s linear infinite;
+  white-space: nowrap;
+  gap: 0;
+}
+
+.modules-marquee .marquee-item {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  color: white;
+  text-transform: uppercase;
+  padding: 0 40px;
+  font-family: 'Cormorant Garamond', serif;
+  text-shadow:
+    0 2px 10px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(232, 213, 163, 0.5);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
+}
+
+/* Étoile avant chaque élément */
+.modules-marquee .marquee-item::before {
+  content: '✦';
+  color: #E8D5A3;
+  font-size: 20px;
+  text-shadow: 0 0 15px rgba(232, 213, 163, 0.9);
+  animation: starPulse 1.5s ease-in-out infinite;
+  margin-right: 8px;
+}
+
+/* Étoile après chaque élément */
+.modules-marquee .marquee-item::after {
+  content: '✦';
+  color: #E8D5A3;
+  font-size: 20px;
+  text-shadow: 0 0 15px rgba(232, 213, 163, 0.9);
+  animation: starPulse 1.5s ease-in-out infinite;
+  margin-left: 8px;
+}
+
+/* Supprimer l'étoile après le dernier élément */
+.modules-marquee .marquee-item:last-child::after {
+  content: '';
+  display: none;
+}
+
+/* Animations */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes starPulse {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scale(1);
+    text-shadow: 0 0 8px rgba(232, 213, 163, 0.6);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+    text-shadow: 0 0 20px rgba(232, 213, 163, 1);
+  }
+}
+
+@keyframes shimmerTop {
+  0% {
+    opacity: 0.3;
+    transform: translateX(-100%);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0.3;
+    transform: translateX(100%);
+  }
+}
+
+@keyframes shimmerBottom {
+  0% {
+    opacity: 0.3;
+    transform: translateX(100%);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0.3;
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes marqueeScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .modules-marquee {
+    padding: 20px 0;
+  }
+
+  .modules-marquee .marquee-item {
+    font-size: 14px;
+    padding: 0 25px;
+    letter-spacing: 3px;
+  }
+
+  .modules-marquee .marquee-item::before,
+  .modules-marquee .marquee-item::after {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modules-marquee {
+    padding: 16px 0;
+  }
+
+  .modules-marquee .marquee-item {
+    font-size: 11px;
+    padding: 0 18px;
+    letter-spacing: 2px;
+  }
+
+  .modules-marquee .marquee-item::before,
+  .modules-marquee .marquee-item::after {
+    font-size: 11px;
+  }
+}
+
+/* Étoile après chaque élément */
+.modules-marquee .marquee-item::after {
+  content: '✦';
+  color: #E8D5A3;
+  font-size: 20px;
+  text-shadow: 0 0 15px rgba(232, 213, 163, 0.9);
+  animation: starPulse 1.5s ease-in-out infinite;
+  margin-left: 8px;
+}
+
+/* Supprimer l'étoile après le dernier élément pour éviter doublon */
+.modules-marquee .marquee-item:last-child::after {
+  content: '';
+  display: none;
+}
+
+/* Animation du gradient de fond */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Animation des étoiles qui scintillent */
+@keyframes starPulse {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scale(1);
+    text-shadow: 0 0 8px rgba(232, 213, 163, 0.6);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+    text-shadow: 0 0 20px rgba(232, 213, 163, 1);
+  }
+}
+
+/* Animation des bordures brillantes */
+@keyframes shimmerTop {
+  0% {
+    opacity: 0.3;
+    transform: translateX(-100%);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0.3;
+    transform: translateX(100%);
+  }
+}
+
+@keyframes shimmerBottom {
+  0% {
+    opacity: 0.3;
+    transform: translateX(100%);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0.3;
+    transform: translateX(-100%);
+  }
+}
+
+/* Animation du glow doré */
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Animation de défilement */
+@keyframes marqueeScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ===== MARQUEE ORIGINAL (pour la première bande) ===== */
+.marquee-strip {
+  background: linear-gradient(90deg, #7D3050, #C2185B);
+  padding: 14px 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+  border-top: 1px solid rgba(255, 215, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.marquee-track {
+  display: flex;
+  gap: 0;
+  animation: marqueeScroll 28s linear infinite;
+  white-space: nowrap;
+}
+
+.mi {
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  padding: 0 28px;
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 500;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.sep {
+  color: var(--gold-light);
+  margin: 0 6px;
+  font-size: 14px;
+  filter: drop-shadow(0 0 5px rgba(201, 169, 110, 0.5));
+}
+
+/* ===== AMÉLIORATIONS POUR LES SECTIONS EXISTANTES ===== */
+.section-tag {
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--violet-soft);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  display: block;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 48px;
+  font-weight: 300;
+  color: var(--rose);
+  line-height: 1.2;
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+}
+
+.section-title em {
+  color: var(--violet-soft);
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* ===== CARTES MODULES ===== */
+.module-card {
+  background: white;
+  border-radius: 24px;
+  padding: 32px 28px;
+  box-shadow: 0 12px 30px rgba(123, 94, 167, 0.08);
+  border: 1px solid rgba(123, 94, 167, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.module-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--rose), var(--violet-soft), var(--gold));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.module-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(123, 94, 167, 0.15);
+  border-color: rgba(123, 94, 167, 0.2);
+}
+
+.module-card:hover::before {
+  opacity: 1;
+}
+
+.module-icon {
+  font-size: 42px;
+  margin-bottom: 20px;
+  display: block;
+  filter: drop-shadow(0 4px 8px rgba(123, 94, 167, 0.2));
+}
+
+.module-tag {
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  color: var(--violet-soft);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.module-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--rose);
+  margin-bottom: 12px;
+}
+
+.module-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.75;
+  margin-bottom: 20px;
+}
+
+.module-badge {
+  display: inline-block;
+  background: var(--violet-pale);
+  color: var(--violet-soft);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  padding: 5px 14px;
+  border-radius: 30px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: 1px solid rgba(123, 94, 167, 0.2);
+}
+
+/* ===== BOUTONS ===== */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, var(--rose), var(--violet-soft));
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 40px;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(123, 94, 167, 0.35);
+  text-decoration: none;
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(123, 94, 167, 0.5);
+  background: linear-gradient(135deg, var(--violet-soft), var(--rose));
+}
+
+.btn-ghost {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.2s;
+  font-weight: 500;
+}
+
+.btn-ghost:hover {
+  color: var(--gold-light);
+}
+
+/* ===== BOUTONS DE TÉLÉCHARGEMENT ===== */
+.download-btns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.dl-btn {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 16px 32px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  backdrop-filter: blur(5px);
+}
+
+.dl-btn:hover {
+  background: rgba(155, 127, 203, 0.15);
+  border-color: var(--violet-soft);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+}
+
+.dl-btn-icon {
+  font-size: 32px;
+}
+
+.dl-btn-text {
+  text-align: left;
+}
+
+.dl-btn-sub {
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 3px;
+}
+
+.dl-btn-main {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  color: white;
+  font-weight: 300;
+  letter-spacing: 0.5px;
+}
+
+/* ===== ANIMATIONS GÉNÉRALES ===== */
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.05); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* ===== EFFETS SPÉCIAUX ===== */
+.violet-glow {
+  text-shadow: 0 0 10px rgba(155, 127, 203, 0.5);
+}
+
+.rose-glow {
+  text-shadow: 0 0 10px rgba(125, 48, 80, 0.4);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .modules-marquee {
+    padding: 20px 0;
+    margin: 20px 0;
+  }
+
+  .modules-marquee .marquee-item {
+    font-size: 14px;
+    padding: 0 25px;
+    letter-spacing: 3px;
+  }
+
+  .modules-marquee .marquee-item::before,
+  .modules-marquee .marquee-item::after {
+    font-size: 14px;
+  }
+
+  .section-title {
+    font-size: 38px;
+  }
+
+  .module-card {
+    padding: 24px 20px;
+  }
+
+  .mi {
+    font-size: 10px;
+    padding: 0 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modules-marquee {
+    padding: 16px 0;
+  }
+
+  .modules-marquee .marquee-item {
+    font-size: 11px;
+    padding: 0 18px;
+    letter-spacing: 2px;
+  }
+
+  .modules-marquee .marquee-item::before,
+  .modules-marquee .marquee-item::after {
+    font-size: 11px;
+  }
+}
+
+/* ===== INTRO SECTION STYLES - Harmonisé avec landing page ===== */
+
+/* Style pour la section intro */
+app-intro-section {
+  display: block;
+  position: relative;
+  z-index: 2;
+  background: var(--cream, #FAF6F0);
+}
+
+/* Ajustement des marges pour la cohérence */
+app-intro-section .intro-section {
+  padding: 80px 40px;
+  margin: 0;
+  background: var(--cream, #FAF6F0);
+  border-top: 1px solid rgba(201, 169, 110, 0.2);
+  border-bottom: 1px solid rgba(201, 169, 110, 0.2);
+}
+
+/* Style pour les badges - harmonisé avec hero */
+app-intro-section .intro-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(201, 169, 110, 0.08);
+  border: 1px solid rgba(201, 169, 110, 0.2);
+  border-radius: 30px;
+  padding: 6px 16px;
+  margin-bottom: 24px;
+}
+
+app-intro-section .badge-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--gold, #C9A96E);
+  border-radius: 50%;
+  animation: badgePulse 2s ease-in-out infinite;
+}
+
+app-intro-section .badge-text {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--gold, #C9A96E);
+  text-transform: uppercase;
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+/* Animation pour le badge */
+@keyframes badgePulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* Style pour le titre principal */
+app-intro-section .main-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: 2.8rem;
+  color: var(--dark, #1A0A12);
+  margin-bottom: 24px;
+  letter-spacing: -0.5px;
+}
+
+app-intro-section .accent-word {
+  color: var(--gold, #C9A96E);
+  position: relative;
+  font-weight: 400;
+}
+
+app-intro-section .accent-word::after {
+  content: '';
+  position: absolute;
+  bottom: 6px;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: rgba(201, 169, 110, 0.2);
+  border-radius: 3px;
+  z-index: -1;
+}
+
+/* Style pour les tabs */
+app-intro-section .tabs-container {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(201, 169, 110, 0.2);
+  border-radius: 50px;
+  padding: 6px;
+  display: inline-flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+app-intro-section .tab-btn {
+  padding: 10px 24px;
+  border-radius: 40px;
+  transition: all 0.3s ease;
+}
+
+app-intro-section .tab-btn.active {
+  background: linear-gradient(135deg, var(--gold, #C9A96E), #A07840);
+  box-shadow: 0 4px 12px rgba(201, 169, 110, 0.3);
+}
+
+app-intro-section .tab-btn.active .tab-number,
+app-intro-section .tab-btn.active .tab-label {
+  color: white;
+}
+
+/* Style pour les cartes */
+app-intro-section .content-card {
+  background: white;
+  border-radius: 24px;
+  border: 1px solid rgba(201, 169, 110, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+}
+
+app-intro-section .content-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
+  border-color: rgba(201, 169, 110, 0.3);
+}
+
+app-intro-section .card-quote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  color: var(--text, #3D2030);
+  border-left: 3px solid var(--gold, #C9A96E);
+}
+
+/* Style pour les statistiques */
+app-intro-section .stat-modern {
+  background: rgba(201, 169, 110, 0.03);
+  border: 1px solid rgba(201, 169, 110, 0.1);
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+app-intro-section .stat-modern:hover {
+  background: rgba(201, 169, 110, 0.08);
+  transform: translateY(-4px);
+  border-color: rgba(201, 169, 110, 0.3);
+}
+
+app-intro-section .stat-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: var(--gold, #C9A96E);
+}
+
+/* Style pour les solutions et avantages */
+app-intro-section .solution-item,
+app-intro-section .benefit-item {
+  background: rgba(201, 169, 110, 0.03);
+  border: 1px solid rgba(201, 169, 110, 0.1);
+  border-radius: 50px;
+  transition: all 0.3s ease;
+}
+
+app-intro-section .solution-item:hover,
+app-intro-section .benefit-item:hover {
+  background: rgba(201, 169, 110, 0.08);
+  transform: translateX(4px);
+  border-color: rgba(201, 169, 110, 0.3);
+}
+
+/* Style pour le CTA button */
+app-intro-section .cta-btn {
+  background: linear-gradient(135deg, var(--gold, #C9A96E), #A07840);
+  border: none;
+  padding: 14px 36px;
+  border-radius: 50px;
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  color: var(--dark, #1A0A12);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(201, 169, 110, 0.25);
+}
+
+app-intro-section .cta-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(201, 169, 110, 0.35);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  app-intro-section .intro-section {
+    padding: 50px 20px;
+  }
+
+  app-intro-section .main-title {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  app-intro-section .tabs-container {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  app-intro-section .tab-btn {
+    padding: 8px 18px;
+  }
+
+  app-intro-section .cta-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,183 @@
+:host {
+  --rose:       #7D3050;
+  --rose-light: #A8547A;
+  --rose-deep:  #5C1F3A;
+  --gold:       #C9A96E;
+  --gold-light: #E8D5A3;
+  --gold-deep:  #A07840;
+  --dark:       #1A0A12;
+  --dark-mid:   #2D1520;
+  --cream:      #FAF6F0;
+  --text:       #3D2030;
+  --text-muted: #8B6070;
+
+  display: block;
+  width: 100%;
+}
+
+.download-section {
+  background: linear-gradient(135deg, var(--dark) 0%, var(--dark-mid) 100%);
+  padding: 100px 20px;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Josefin Sans', sans-serif;
+  text-align: center;  /* ← CENTRER TOUT LE TEXTE */
+}
+
+.download-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 25% 50%, rgba(201,169,110,0.08) 0%, transparent 60%),
+    radial-gradient(circle at 75% 50%, rgba(125,48,80,0.12) 0%, transparent 60%);
+}
+
+.dl-content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* ===== BADGE "DISPONIBLE MAINTENANT" ===== */
+.section-tag {
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--gold);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+/* ===== TITRE PRINCIPAL ===== */
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 52px;
+  font-weight: 300;
+  color: white;
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+
+.section-title strong {
+  font-weight: 700;
+  color: white;
+}
+
+.section-title em {
+  color: var(--gold);
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* ===== DESCRIPTION ===== */
+.section-desc {
+  font-size: 15px;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.6;
+  margin: 0 auto 40px;
+  max-width: 550px;
+}
+
+/* ===== CONTENEUR DES BOUTONS ===== */
+.download-btns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+/* ===== BOUTONS ===== */
+.dl-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 40px;
+  padding: 14px 28px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Josefin Sans', sans-serif;
+  color: white;
+  min-width: 200px;
+  justify-content: center;
+}
+
+.dl-btn:hover {
+  background: rgba(201,169,110,0.15);
+  border-color: var(--gold);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+.dl-icon {
+  font-size: 28px;
+}
+
+.dl-text {
+  text-align: left;
+}
+
+.dl-sub {
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.dl-main {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  color: white;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* ===== NOTE DE BAS ===== */
+.dl-note {
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-top: 30px;
+  font-weight: 400;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .download-section {
+    padding: 70px 20px;
+  }
+
+  .section-title {
+    font-size: 42px;
+  }
+
+  .download-btns {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .dl-btn {
+    width: 100%;
+    max-width: 280px;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-title {
+    font-size: 36px;
+  }
+
+  .section-desc {
+    font-size: 14px;
+  }
+}

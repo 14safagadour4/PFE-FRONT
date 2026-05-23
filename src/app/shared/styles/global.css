@@ -1,0 +1,132 @@
+/* ══════════════════════════════════════════════════════
+   STYLES.CSS — Cartas Global
+   Adapté au prototype cartas-platform
+   ══════════════════════════════════════════════════════ */
+
+/* ── Google Fonts ────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Josefin+Sans:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+/* ── Variables globales ──────────────────────────── */
+:root {
+  /* Landing — palette rose/or */
+  --rose:        #7D3050;
+  --rose-light:  #A8547A;
+  --rose-pale:   #F5E8EE;
+  --rose-deep:   #5C1F3A;
+  --gold:        #C9A96E;
+  --gold-light:  #E8D5A3;
+  --gold-deep:   #A07840;
+  --cream:       #FAF6F0;
+  --dark:        #1A0A12;
+  --dark-mid:    #2D1520;
+  --text:        #3D2030;
+  --text-muted:  #8B6070;
+  --sage:        #6B9E6F;
+  --sage-light:  #A8CBAC;
+
+  /* Admin backoffice — palette violet */
+  --violet:      #7b5ea7;
+  --violet-hi:   #9b7fcb;
+  --violet-lo:   #5a3f85;
+  --violet-soft: rgba(123,94,167,0.10);
+  --v-gold:      #c9a84c;
+  --v-gold-hi:   #e8c96a;
+  --success:     #4ecba3;
+  --danger:      #e05c7a;
+  --warning:     #f59e0b;
+}
+
+/* ── Reset ───────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  height: 100%;
+}
+
+body {
+  font-family: 'Josefin Sans', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  overflow-x: hidden;
+  height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── App root ────────────────────────────────────── */
+app-root {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Landing page ────────────────────────────────── */
+app-home {
+  display: block;
+  width: 100%;
+  background: var(--cream);
+}
+
+/* ── Admin backoffice ────────────────────────────── */
+app-layout {
+  display: block;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: #0f0d1a;
+}
+
+/* ── Scrollbar global ────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(125, 48, 80, 0.25);
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(125, 48, 80, 0.45);
+}
+
+/* ── Typography ──────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: inherit;
+  line-height: 1.2;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: 'Josefin Sans', sans-serif;
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ── Utility ─────────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
