@@ -18,8 +18,4 @@ export class DashboardService {
       { params: new HttpParams().set('page', page).set('size', size) }
     );
   }
-
-  getAIStats(): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/phyto-lab/stats`);
-  }
 }

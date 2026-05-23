@@ -19,7 +19,7 @@ export class LayoutComponent {
   sidenavOpen = signal(true);
   mgmtOpen = signal(false);
   currentPage = signal('Dashboard');
-  isDark = computed(() => this.auth.theme() === 'dark');
+  isDark = signal(true);
 
   user = this.auth.currentUser;
   initials = computed(() => {
@@ -36,7 +36,7 @@ export class LayoutComponent {
       section: 'Principal',
       badge: '',
       badgeType: '',
-      roles: ['SUPER_ADMIN', 'ADMIN_CONTENU', 'ADMIN_UTILISATEURS', 'ADMIN_LECTURE'],
+      saOnly: false,
     },
     {
       ico: '⚡',
@@ -45,7 +45,7 @@ export class LayoutComponent {
       section: 'Principal',
       badge: '12',
       badgeType: 'g',
-      roles: ['SUPER_ADMIN', 'ADMIN_CONTENU', 'ADMIN_UTILISATEURS', 'ADMIN_LECTURE'],
+      saOnly: false,
     },
     {
       ico: '👥',
@@ -54,7 +54,7 @@ export class LayoutComponent {
       section: 'Gestion',
       badge: '3',
       badgeType: 'r',
-      roles: ['SUPER_ADMIN', 'ADMIN_UTILISATEURS'],
+      saOnly: false,
     },
     {
       ico: '🩺',
@@ -63,7 +63,7 @@ export class LayoutComponent {
       section: 'Gestion',
       badge: '',
       badgeType: '',
-      roles: ['SUPER_ADMIN', 'ADMIN_UTILISATEURS'],
+      saOnly: false,
     },
     {
       ico: '🎭',
@@ -72,7 +72,7 @@ export class LayoutComponent {
       section: 'Gestion',
       badge: '',
       badgeType: '',
-      roles: ['SUPER_ADMIN', 'ADMIN_UTILISATEURS'],
+      saOnly: false,
     },
     {
       ico: '🤝',
@@ -81,7 +81,7 @@ export class LayoutComponent {
       section: 'Gestion',
       badge: '',
       badgeType: '',
-      roles: ['SUPER_ADMIN'],
+      saOnly: true,
     },
     {
       ico: '📚',
@@ -90,7 +90,7 @@ export class LayoutComponent {
       section: 'Contenu & Système',
       badge: '',
       badgeType: '',
-      roles: ['SUPER_ADMIN', 'ADMIN_CONTENU'],
+      saOnly: false,
     },
     {
       ico: '🔐',
@@ -99,7 +99,7 @@ export class LayoutComponent {
       section: 'Contenu & Système',
       badge: '',
       badgeType: '',
-      roles: ['SUPER_ADMIN'],
+      saOnly: true,
     },
     {
       ico: '⚙️',
@@ -108,7 +108,7 @@ export class LayoutComponent {
       section: 'Contenu & Système',
       badge: '',
       badgeType: '',
-      roles: ['SUPER_ADMIN', 'ADMIN_CONTENU', 'ADMIN_UTILISATEURS', 'ADMIN_LECTURE'],
+      saOnly: true,
     },
   ];
 
@@ -123,10 +123,9 @@ export class LayoutComponent {
 
   // ── Sections ──────────────────────────────────────
   get visibleItems() {
-    const userRole = this.user()?.role;
-    if (!userRole) return [];
-    
-    return this.allItems.filter(item => item.roles.includes(userRole));
+    return this.allItems;
+    // Remettre quand auth stable :
+    // return this.allItems.filter(i => !i.saOnly || this.auth.isSuperAdmin());
   }
 
   get visibleSections() {
@@ -152,7 +151,14 @@ export class LayoutComponent {
   }
 
   toggleTheme() {
+    this.isDark.update((v) => !v);
     this.auth.toggleTheme();
+    localStorage.setItem('theme', this.isDark() ? 'dark' : 'light');
+    if (this.isDark()) {
+      document.body.classList.remove('light-theme');
+    } else {
+      document.body.classList.add('light-theme');
+    }
   }
 
   logout() {

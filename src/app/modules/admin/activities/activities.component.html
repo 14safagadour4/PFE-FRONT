@@ -12,19 +12,19 @@
         <div class="search-box">
             <span>🔍</span>
             <input type="text" placeholder="Rechercher une action, un utilisateur..." [(ngModel)]="searchTerm"
-                (ngModelChange)="onSearchChange()" />
+                (ngModelChange)="page=0; applyFilters()" />
         </div>
         <div class="filter-tabs">
             <button [class.active]="severityFilter==='ALL'"
-                (click)="onSeverityChange('ALL')">Tous</button>
+                (click)="severityFilter='ALL';     page=0; applyFilters()">Tous</button>
             <button [class.active]="severityFilter==='SUCCESS'"
-                (click)="onSeverityChange('SUCCESS')">✅ Succès</button>
+                (click)="severityFilter='SUCCESS'; page=0; applyFilters()">✅ Succès</button>
             <button [class.active]="severityFilter==='INFO'"
-                (click)="onSeverityChange('INFO')">ℹ️ Info</button>
+                (click)="severityFilter='INFO';    page=0; applyFilters()">ℹ️ Info</button>
             <button [class.active]="severityFilter==='WARNING'"
-                (click)="onSeverityChange('WARNING')">⚠️ Warning</button>
+                (click)="severityFilter='WARNING'; page=0; applyFilters()">⚠️ Warning</button>
             <button [class.active]="severityFilter==='ERROR'"
-                (click)="onSeverityChange('ERROR')">🔴 Erreur</button>
+                (click)="severityFilter='ERROR';   page=0; applyFilters()">🔴 Erreur</button>
         </div>
     </div>
 
