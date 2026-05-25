@@ -233,6 +233,7 @@
   margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   position: relative;
@@ -678,6 +679,26 @@
   transform: none !important;
 
   &:hover { background: var(--surface3); }
+}
+
+.btn-cancel {
+  padding: 11px 22px;
+  background: transparent;
+  border: 1px solid var(--border-v);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--t) var(--ease);
+}
+
+.btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--violet-hi);
+  color: var(--text-soft);
+  transform: translateY(-1px);
 }
 
 .btn-save {

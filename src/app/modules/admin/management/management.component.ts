@@ -45,6 +45,8 @@ export class ManagementModalComponent implements OnInit {
         { id: 2, icon: '📚', name: 'Admin Contenu', desc: 'Ajouter et gérer le contenu éducatif.' },
         { id: 3, icon: '👥', name: 'Admin Utilisateurs', desc: 'Valider et gérer les comptes.' },
         { id: 4, icon: '⚙️', name: 'Admin Général', desc: 'Accès étendu sauf Super Admin.' },
+        { id: 5, icon: '📊', name: 'Analyste', desc: 'Voir la progression de l\'entraînement de l\'IA (AI training).' },
+        { id: 6, icon: '📦', name: 'Admin Gestionnaire Produit', desc: 'Contrôle de tous les produits (fonctionnalité future).' },
     ];
 
     selectedRoleId = 1;
@@ -63,9 +65,17 @@ export class ManagementModalComponent implements OnInit {
         this.svc.getRoles().subscribe({
             next: r => {
                 if (r.success && r.data.length) {
+                    const icons: Record<string, string> = {
+                        'ADMIN_LECTURE': '👁',
+                        'ADMIN_CONTENU': '📚',
+                        'ADMIN_UTILISATEURS': '👥',
+                        'ADMIN_GENERAL': '⚙️',
+                        'ROLE_ANALYSTE': '📊',
+                        'ADMIN_PRODUCT_MANAGER': '📦'
+                    };
                     this.roles = r.data.map((role, i) => ({
                         id: role.id,
-                        icon: ['👁', '📚', '👥', '⚙️'][i % 4],
+                        icon: icons[role.name] || ['👁', '📚', '👥', '⚙️', '📊', '📦'][i % 6],
                         name: role.displayName,
                         desc: role.description
                     }));

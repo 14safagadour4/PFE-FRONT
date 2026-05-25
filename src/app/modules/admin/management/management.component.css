@@ -30,9 +30,9 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: rgba(8, 6, 16, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -150,7 +150,7 @@ form { margin-bottom: 22px; }
 
 .f-wrap:focus-within {
   border-color: var(--violet-hi);
-  box-shadow: 0 0 0 3px rgba(123, 94, 167, 0.15);
+  box-shadow: 0 0 0 3px rgba(123, 94, 167, 0.20);
 }
 
 .f-ico {
@@ -159,6 +159,12 @@ form { margin-bottom: 22px; }
   font-size: 14px;
   opacity: .5;
   pointer-events: none;
+  transition: all var(--t) var(--ease);
+}
+
+.f-wrap:focus-within .f-ico {
+  opacity: 0.95;
+  transform: scale(1.15);
 }
 
 input {
@@ -211,20 +217,23 @@ input::placeholder { color: var(--text-muted); }
   background: var(--surface2);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  padding: 12px 14px;
+  padding: 14px;
   cursor: pointer;
-  transition: background var(--t) var(--ease), border-color var(--t) var(--ease);
+  transition: all var(--t) var(--ease-back);
+  position: relative;
 }
 
 .role-opt:hover {
-  border-color: var(--border-v);
+  border-color: var(--violet-hi);
   background: var(--violet-soft);
+  transform: translateY(-3px);
 }
 
 .role-opt.picked {
   border-color: var(--violet-hi);
-  background: rgba(123, 94, 167, 0.18);
-  box-shadow: 0 0 0 1px rgba(123, 94, 167, 0.3);
+  background: rgba(123, 94, 167, 0.22);
+  box-shadow: 0 8px 24px rgba(123, 94, 167, 0.25);
+  transform: translateY(-3px);
 }
 
 .ro-name {
