@@ -5,7 +5,6 @@
             <h1>Contenu</h1>
             <p>Gérer les articles, vidéos et exercices de la plateforme</p>
         </div>
-        <button class="btn-primary" (click)="openCreateModal()">+ Nouveau Contenu</button>
     </div>
 
     <!-- Stats -->
@@ -75,7 +74,6 @@
                 <button class="btn-toggle" (click)="toggleStatus(item)" *ngIf="item.status !== 'ARCHIVED'">
                     {{ item.status === 'PUBLISHED' ? '⏸ Dépublier' : '▶ Publier' }}
                 </button>
-                <button class="btn-edit" (click)="openEditModal(item)">✏️</button>
                 <button class="btn-archive" (click)="archive(item)" *ngIf="item.status !== 'ARCHIVED'">🗄</button>
             </div>
         </div>
@@ -88,122 +86,26 @@
 
     <!-- Modal -->
     <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
-        <div class="modal" (click)="$event.stopPropagation()">
+        <div class="modal" (click)="$event.stopPropagation()" *ngIf="selectedItem">
             <button class="modal-close" (click)="closeModal()">×</button>
-            
-            <!-- Mode Visualisation -->
-            <ng-container *ngIf="!isCreateMode && selectedItem">
-                <div class="modal-type">{{ typeIcons[selectedItem.type] }} {{ selectedItem.type }}</div>
-                <h2>{{ selectedItem.title }}</h2>
-                <div class="modal-body">
-                    <div class="info-row"><span>Catégorie</span><strong>{{ selectedItem.category }}</strong></div>
-                    <div class="info-row"><span>Auteur</span><strong>{{ selectedItem.author }}</strong></div>
-                    <div class="info-row"><span>Statut</span>
-                        <span class="status-badge" [ngClass]="selectedItem.status.toLowerCase()">{{ selectedItem.status }}</span>
-                    </div>
-                    <div class="info-row"><span>Vues</span><strong>{{ selectedItem.views | number }}</strong></div>
-                    <div class="info-row"><span>Créé le</span><strong>{{ selectedItem.createdAt | date:'dd/MM/yyyy'
-                            }}</strong></div>
-                    <div class="info-row"><span>Mis à jour</span><strong>{{ selectedItem.updatedAt | date:'dd/MM/yyyy'
-                            }}</strong></div>
-                    <div class="desc" *ngIf="selectedItem.description">
-                        <p>{{ selectedItem.description }}</p>
-                    </div>
+            <div class="modal-type">{{ typeIcons[selectedItem.type] }} {{ selectedItem.type }}</div>
+            <h2>{{ selectedItem.title }}</h2>
+            <div class="modal-body">
+                <div class="info-row"><span>Catégorie</span><strong>{{ selectedItem.category }}</strong></div>
+                <div class="info-row"><span>Auteur</span><strong>{{ selectedItem.author }}</strong></div>
+                <div class="info-row"><span>Statut</span>
+                    <span class="status-badge" [ngClass]="selectedItem.status.toLowerCase()">{{ selectedItem.status
+                        }}</span>
                 </div>
-            </ng-container>
-
-            <!-- Mode Création / Édition -->
-            <ng-container *ngIf="isCreateMode || isEditMode">
-                <h2>{{ isEditMode ? 'Modifier le Module' : 'Nouveau Module d\'Apprentissage' }}</h2>
-                <form (submit)="saveModule(); $event.preventDefault()" class="create-form">
-                    <div class="form-group">
-                        <label>Titre du Module</label>
-                        <input type="text" [(ngModel)]="newModule.title" name="title" required placeholder="ex: Les secrets du Thym">
-                    </div>
-                    <div class="form-group mb-3">
-                <label class="form-label text-muted small fw-bold">IMAGE URL (ASSETS)</label>
-                <input type="text" class="form-control form-control-lg custom-input" [(ngModel)]="newModule.imageUrl" name="imageUrl" placeholder="ex: assets/images/screen2.png">
-              </div>
-
-              <div class="form-group mb-3">
-                <label class="form-label text-muted small fw-bold">DESCRIPTION</label>
-                <textarea class="form-control form-control-lg custom-input" rows="3" [(ngModel)]="newModule.description" name="description" placeholder="Une courte introduction..."></textarea>
-              </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Catégorie</label>
-                            <select [(ngModel)]="newModule.categoryId" name="categoryId" required>
-                                <option [ngValue]="null" disabled>Sélectionner...</option>
-                                <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Type de Contenu</label>
-                            <select [(ngModel)]="newModule.contentType" name="contentType" required>
-                                <option value="ARTICLE">📄 Article</option>
-                                <option value="VIDEO">🎬 Vidéo</option>
-                                <option value="PODCAST">🎙️ Podcast</option>
-                                <option value="EXERCISE">🧘 Exercice</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Auteur (Partenaire)</label>
-                            <input type="text" [(ngModel)]="newModule.authorName" name="authorName" placeholder="Nom de l'expert">
-                        </div>
-                        <div class="form-group">
-                            <label>Durée estimée</label>
-                            <input type="text" [(ngModel)]="newModule.duration" name="duration" placeholder="ex: 15 min">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Nombre total de leçons</label>
-                            <input type="number" [(ngModel)]="newModule.totalLessons" name="totalLessons" readonly>
-                        </div>
-                    </div>
-
-                    <!-- Lessons List -->
-                    <div class="lessons-section">
-                        <div class="section-header">
-                            <h3>Leçons ({{ newModule.lessons.length }})</h3>
-                            <button type="button" class="btn-add-lesson" (click)="addLesson()">+ Ajouter une leçon</button>
-                        </div>
-                        <div class="lessons-list">
-                            <div class="lesson-card-modern" *ngFor="let lesson of newModule.lessons; let i = index" [class.collapsed]="!lesson.expanded">
-                                <div class="lesson-header" (click)="toggleLesson(lesson)">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="accordion-icon">{{ lesson.expanded ? '▼' : '▶' }}</span>
-                                        <span class="lesson-number">Leçon #{{i + 1}}</span>
-                                        <span class="lesson-preview-title" *ngIf="!lesson.expanded">{{ lesson.title || '(Sans titre)' }}</span>
-                                    </div>
-                                    <button type="button" class="btn-remove-modern" (click)="removeLesson(i); $event.stopPropagation()">×</button>
-                                </div>
-                                <div class="lesson-body" *ngIf="lesson.expanded">
-                                    <div class="form-group mb-2">
-                                        <label class="small text-muted fw-bold">TITRE DE LA LEÇON</label>
-                                        <input type="text" [(ngModel)]="lesson.title" name="l_title_{{i}}" class="form-control" placeholder="Entrez le titre..." required>
-                                    </div>
-                                    <div class="form-group mb-2">
-                                        <label class="small text-muted fw-bold">DURÉE</label>
-                                        <input type="text" [(ngModel)]="lesson.duration" name="l_dur_{{i}}" class="form-control" placeholder="ex: 5 min">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="small text-muted fw-bold">CONTENU ÉDUCATIF</label>
-                                        <textarea [(ngModel)]="lesson.contentText" name="l_content_{{i}}" class="form-control" placeholder="Écrivez le cours ici..." rows="5"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="button" class="btn-cancel" (click)="closeModal()">Annuler</button>
-                        <button type="submit" class="btn-save">{{ isEditMode ? 'Mettre à jour' : 'Enregistrer' }}</button>
-                    </div>
-                </form>
-            </ng-container>
+                <div class="info-row"><span>Vues</span><strong>{{ selectedItem.views | number }}</strong></div>
+                <div class="info-row"><span>Créé le</span><strong>{{ selectedItem.createdAt | date:'dd/MM/yyyy'
+                        }}</strong></div>
+                <div class="info-row"><span>Mis à jour</span><strong>{{ selectedItem.updatedAt | date:'dd/MM/yyyy'
+                        }}</strong></div>
+                <div class="desc" *ngIf="selectedItem.description">
+                    <p>{{ selectedItem.description }}</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>

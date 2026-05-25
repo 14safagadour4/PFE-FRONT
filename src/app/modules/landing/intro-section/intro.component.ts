@@ -18,7 +18,7 @@ import {
 export class IntroComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('introSection') introSection!: ElementRef;
 
-  imageUrl: string = 'assets/images/women-botany.jpg';
+  imageUrl: string = 'https://pleased-pink-ptj3ygjcd5.edgeone.app/cartas-forum-community-bg.png';
   isVisible = false;
   activeTab = 'problem';
 

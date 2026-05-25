@@ -95,10 +95,6 @@ export class SpecialistsComponent implements OnInit {
       s.status = 'ACTIVE';
       s.validatedAt = new Date().toISOString();
       this.computeStats();
-      // On attend un peu avant de filtrer pour que l'admin voie le changement de statut
-      setTimeout(() => {
-        this.applyFilters();
-      }, 1500);
     });
   }
 
@@ -115,9 +111,6 @@ export class SpecialistsComponent implements OnInit {
       this.selectedSpecialist!.refusalReason = this.refusalReason;
       this.showRefusalModal = false;
       this.computeStats();
-      setTimeout(() => {
-        this.applyFilters();
-      }, 1500);
     });
   }
 
